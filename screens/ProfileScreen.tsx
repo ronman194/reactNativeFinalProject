@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { useSelector } from 'react-redux';
 import UserModel, { UpdateUser } from '../models/UserModel';
 import * as ImagePicker from 'expo-image-picker'
@@ -7,7 +7,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import uploadToCloudinary from '../api/cloudinaryApi';
 import store from '../redux/store';
 import Toast from 'react-native-toast-message';
-
 
 
 
@@ -23,6 +22,9 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     const [lastName, setLastName] = useState(userLastName)
     const [imgSrc, setImgSrc] = useState({});
     const [cloudSrc, setCloudSrc] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+
 
     const askPermission = async () => {
         try {
@@ -88,8 +90,9 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     }
 
     const onSaveCallback = async () => {
+        setIsLoading(true);
         const res = await getImgCloudSrc();
-        setCloudSrc( res.data.url);
+        setCloudSrc(res.data.url);
         console.log("PATHHHHHH " + cloudSrc)
         try {
             store.dispatch({
@@ -105,6 +108,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 profileImage: res.data.url
             }
             const us: any = await UserModel.updateUser(user, userAccessToken);
+            setIsLoading(false);
             navigation.goBack()
         } catch (err) {
             console.log("fail to update a user: " + err)
@@ -113,6 +117,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 text1: 'Error',
                 text2: "fail to update a user"
             });
+            setIsLoading(false);
         }
     }
 
@@ -120,17 +125,25 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
         setFirstName(userFirstName);
         setLastName(userLastName);
         setCloudSrc(profileImage);
-        // setProfileImageUri(profileImage);
-        navigation.goBack();
+        setProfileImageUri(profileImage);
     }
 
     return (
         <ScrollView>
             <View style={{ flex: 1, justifyContent: 'center', }}>
+                {isLoading && <ActivityIndicator style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    justifyContent: "center",
+                    alignItems: "center",margin:5
+                }} color={"#0000ff"} size="large" />}
                 <View>
                     {profileImage === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
-                    {profileImage === profileImageUri ?<Image source={{ uri: profileImage }} style={styles.imageProfile}></Image>:
-                    <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
+                    {profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
+                        <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
                     {/* {profileImage != "../assets/user.png" && <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image>} */}
                     {/* {profileImageUri === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
                     {profileImageUri != "../assets/user.png" && <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>} */}
@@ -157,10 +170,10 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 />
 
                 <View style={styles.buttonesContainer}>
-                    <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
+                    <TouchableOpacity disabled={isLoading} onPress={onCancellCallback} style={styles.button}>
                         <Text style={styles.buttonText}>CANCELL</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
+                    <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.button}>
                         <Text style={styles.buttonText}>UPDATE</Text>
                     </TouchableOpacity>
                 </View>
@@ -175,6 +188,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 300,
         marginTop: 25,
+        marginBottom: 30,
         borderRadius: 150,
     },
     cameraButton: {
