@@ -49,7 +49,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const uri = res.assets[0].uri
                 setProfileImageUri(uri)
                 const type = "image/jpg";
-                const name = res.assets[0].fileName;
+                const name = Date.now()+'.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
                 console.log(source)
@@ -216,7 +216,6 @@ const styles = StyleSheet.create({
     inputTitle: {
         marginTop: 20,
         padding: 10,
-        fontFamily: 'Cochin',
         fontWeight: 'bold',
         fontSize: 26,
         textAlign: 'center'

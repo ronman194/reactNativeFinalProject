@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView, SafeAreaView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import StudentModel, { Student } from '../models/StudentModel';
@@ -81,47 +81,49 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
         navigation.goBack();
     }
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <View>
-                    {avatarUri == "" && <Image source={require('../assets/ava.png')} style={styles.avatar}></Image>}
-                    {avatarUri != "" && <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>}
+        <SafeAreaView>
+            <ScrollView>
+                <View style={styles.container}>
+                    <View>
+                        {avatarUri == "" && <Image source={require('../assets/ava.png')} style={styles.avatar}></Image>}
+                        {avatarUri != "" && <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>}
 
-                    <TouchableOpacity onPress={openCamera} >
-                        <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={openGallery} >
-                        <Ionicons name={'image'} style={styles.galleryButton} size={50} />
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={openCamera} >
+                            <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={openGallery} >
+                            <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                        </TouchableOpacity>
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setId}
+                        value={id}
+                        placeholder={'Student ID'}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setName}
+                        value={name}
+                        placeholder={'Student Name'}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setAddress}
+                        value={address}
+                        placeholder={'Student Address'}
+                    />
+                    <View style={styles.buttonesContainer}>
+                        <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
+                            <Text style={styles.buttonText}>CANCELL</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
+                            <Text style={styles.buttonText}>SAVE</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setId}
-                    value={id}
-                    placeholder={'Student ID'}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setName}
-                    value={name}
-                    placeholder={'Student Name'}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setAddress}
-                    value={address}
-                    placeholder={'Student Address'}
-                />
-                <View style={styles.buttonesContainer}>
-                    <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
-                        <Text style={styles.buttonText}>CANCELL</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
-                        <Text style={styles.buttonText}>SAVE</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
