@@ -48,30 +48,27 @@ const getAllPosts = async (accessToken: string) => {
     const res: any = await postApi.getListPost(accessToken)
     console.log("RESSSSSSSS ")
     console.log(res);
-    let data:any = []
+    let data: any = []
     if (res.data) {
-        res.data.post.forEach((obj:any) => {
+        res.data.post.forEach((obj: any) => {
             data.push(obj)
         });
-    // let data = Array<PostDetails>()
-    // if (res.data) {
-    //     res.data.post.forEach((obj: PostDetails) => {
-    //         // console.log("element: " + obj._id)
-    //         const pt: PostDetails = {
-    //             message: obj.message,
-    //             firstName: obj.firstName,
-    //             lastName: obj.lastName,
-    //             sender: obj.sender,
-    //             image: obj.image,
-    //             profileImage: obj.profileImage,
-    //             likes: [],
-    //             comments: [],
-    //             _id: obj._id
-    //         }
-    //         data.push(pt)
-    //     });
     }
     return data;
 }
 
-export default { addPost, getAllPosts }
+const getAllPostsBySender = async (sender: string, accessToken: string) => {
+    console.log("get posts by: " + sender)
+    const res: any = await postApi.getPostsBySender(sender, accessToken)
+    console.log("RESSSSSSSS ")
+    console.log(res);
+    let data: any = []
+    if (res.data) {
+        res.data.post.forEach((obj: any) => {
+            data.push(obj)
+        });
+    }
+    return data;
+}
+
+export default { addPost, getAllPosts, getAllPostsBySender }

@@ -217,6 +217,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
 
     useEffect(() => {
         askPermission();
+        console.log("img src ")
     }, []);
 
     const openCamera = async () => {
@@ -226,7 +227,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 const uri = res.assets[0].uri
                 setPostImage(uri)
                 const type = "image/jpg";
-                const name = Date.now()+'.jpg';
+                const name = Date.now() + '.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
                 console.log(source)
@@ -269,31 +270,63 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
     }
     const postCallback = async () => {
         setIsLoading(true);
-        const res = await getImgCloudSrc();
-        console.log("HIIJJJ " + res.data);
-        setCloudSrc(res.data.url);
-        console.log("PATHHHHHH " + cloudSrc)
-        try {
-            const post: Post = {
-                message: postText,
-                image: res.data.url,
-                sender: userEmail.toLowerCase(),
-                firstName: firstName,
-                lastName: lastName,
-                profileImage: profileImage
+        if (postImage != '') {
+            const res = await getImgCloudSrc();
+            console.log("HIIJJJ " + res.data);
+            setCloudSrc(res.data.url);
+            console.log("PATHHHHHH " + cloudSrc)
+            try {
+                const post: Post = {
+                    message: postText,
+                    image: res.data.url,
+                    // image: res.data.url,
+                    sender: userEmail.toLowerCase(),
+                    firstName: firstName,
+                    lastName: lastName,
+                    profileImage: profileImage
+                }
+                const us: any = await PostModel.addPost(post, userAccessToken);
+                setIsLoading(false);
+                navigation.navigate('Posts')
+            } catch (err) {
+                console.log("fail to update a user: " + err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: "fail to upload a post"
+                });
+                setIsLoading(false);
             }
-            const us: any = await PostModel.addPost(post, userAccessToken);
-            setIsLoading(false);
-            navigation.goBack()
-        } catch (err) {
-            console.log("fail to update a user: " + err)
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: "fail to upload a post"
-            });
-            setIsLoading(false);
         }
+        else {
+            try {
+                const post: Post = {
+                    message: postText,
+                    image: '',
+                    // image: res.data.url,
+                    sender: userEmail.toLowerCase(),
+                    firstName: firstName,
+                    lastName: lastName,
+                    profileImage: profileImage
+                }
+                const us: any = await PostModel.addPost(post, userAccessToken);
+                setIsLoading(false);
+                navigation.navigate('Posts')
+            } catch (err) {
+                console.log("fail to update a user: " + err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: "fail to upload a post"
+                });
+                setIsLoading(false);
+            }
+        }
+        setPostText('');
+        setPostImage('');
+        setImgSrc({});
+        setCloudSrc('');
+        setIsLoading(false);
     }
 
     return (

@@ -7,6 +7,7 @@ import StudentAdd from '../screens/StudentAdd';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddPost from '../screens/AddPost';
 import Feed from '../screens/PostsScreen';
+import PostStack from './PostStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -22,7 +23,8 @@ function BottomTabNavigator() {
                     iconName = focused
                         ? 'information-circle'
                         : 'information-circle-outline';
-                } else if (route.name === 'StudentAdd') {
+                } 
+                else if (route.name === 'StudentAdd') {
                     iconName = focused ? 'list-circle' : 'list-circle-outline';
                 }
                 else if (route.name === 'Profile') {
@@ -44,7 +46,7 @@ function BottomTabNavigator() {
 
             <Tab.Screen name="StudentList" component={StudentList} />
             <Tab.Screen name="StudentAdd" component={StudentAdd} />
-            <Tab.Screen name="Posts" component={Feed} />
+            <Tab.Screen name="Posts" component={PostStack} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="AddPost" component={AddPost} />
         </Tab.Navigator>

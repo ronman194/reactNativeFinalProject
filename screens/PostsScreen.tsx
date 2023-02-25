@@ -1,25 +1,36 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useState, useEffect, FC } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, Image, StyleSheet, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
-import PostModel, { PostDetails } from '../models/PostModel';
-
-const Post: FC<{ post: any }> =
-    ({ post }) => {
-        return (
-            <View style={styles.postContainer}>
-                <View style={styles.header}>
-                    <Image style={styles.avatar} source={{ uri: post.senderProfileImage }} />
-                    <Text style={styles.username}>{post.senderFirstName} {post.senderLastName}</Text>
-                </View>
-                {post.postImage && <Image style={styles.postImage} source={{ uri: post.postImage }} />}
-                <Text style={styles.caption}>{post.message}</Text>
-            </View>
-        );
-    };
+import PostModel from '../models/PostModel';
+import Post from '../Components/Post';
+// const Post: FC<{ navigation: any, post: any }> =
+//     ({ navigation, post }) => {
+//         const userEmail = useSelector((state: any) => state.email).toLowerCase();
+//         const cliked = () => {
+//             console.log("ID " + post._id);
+//             navigation.navigate("StudentAdd")
+//         }
+//         return (
+//             <View style={styles.postContainer}>
+//                 <View style={styles.header}>
+//                     <Image style={styles.avatar} source={{ uri: post.senderProfileImage }} />
+//                     <Text style={styles.username}>{post.senderFirstName} {post.senderLastName}</Text>
+//                     {userEmail === post.sender &&
+//                         <TouchableOpacity onPress={cliked} >
+//                             <Text style={styles.editPostButton}>Edit Post</Text>
+//                         </TouchableOpacity>}
+//                 </View>
+//                 {post.postImage && <Image style={styles.postImage} source={{ uri: post.postImage }} />}
+//                 <Text style={styles.caption}>{post.message}</Text>
+//             </View>
+//         );
+//     };
 
 const Feed: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Array<any>>([]);
     const userAccessToken = useSelector((state: any) => state.accessToken);
+
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -43,7 +54,7 @@ const Feed: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
             <View style={styles.container}>
                 <FlatList
                     data={posts}
-                    renderItem={({ item }) => <Post post={item} />}
+                    renderItem={({ item }) => <Post post={item} navigation={navigation} />}
                     keyExtractor={item => item._id.toString()}
                 />
             </View>
@@ -56,12 +67,14 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f0f0f0',
         padding: 10,
+        // marginTop: StatusBar.currentHeight
+
     },
     postContainer: {
         backgroundColor: '#ffffff',
         borderRadius: 10,
         marginBottom: 10,
-        marginHorizontal:15,
+        marginHorizontal: 15,
         padding: 10,
     },
     header: {
@@ -86,6 +99,11 @@ const styles = StyleSheet.create({
     caption: {
         fontSize: 16,
     },
+    editPostButton: {
+        fontWeight: 'bold',
+        alignSelf: 'flex-end',
+        marginLeft: 120
+    }
 });
 
 export default Feed;
