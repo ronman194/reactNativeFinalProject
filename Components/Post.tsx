@@ -2,6 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
+import Colors from '../tools/Colors';
 
 const Post: FC<{ navigation: any, post: any }> =
     ({ navigation, post }) => {
@@ -28,7 +29,7 @@ const Post: FC<{ navigation: any, post: any }> =
 
 const styles = StyleSheet.create({
     postContainer: {
-        backgroundColor: '#ffffff',
+        backgroundColor: Colors.header,
         borderRadius: 10,
         marginBottom: 10,
         marginHorizontal: 15,
@@ -47,6 +48,7 @@ const styles = StyleSheet.create({
     },
     username: {
         fontWeight: 'bold',
+        color: Colors.text
     },
     postImage: {
         width: '100%',
@@ -55,11 +57,13 @@ const styles = StyleSheet.create({
     },
     caption: {
         fontSize: 16,
+        color: Colors.text
     },
     editPostButton: {
         fontWeight: 'bold',
         alignSelf: 'flex-end',
-        marginLeft: 120
+        marginLeft: 120,
+        color: Colors.text
     }
 });
 

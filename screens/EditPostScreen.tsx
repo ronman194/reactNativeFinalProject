@@ -7,6 +7,8 @@ import * as ImagePicker from 'expo-image-picker'
 import uploadToCloudinary from '../api/cloudinaryApi';
 import Toast from 'react-native-toast-message';
 import PostModel, { UpdatePost } from '../models/PostModel';
+import Colors from '../tools/Colors';
+import Loading from '../Components/Loading';
 
 const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const postId = JSON.stringify(route.params.postId)
@@ -108,22 +110,22 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
         setPostImage('');
         setImgSrc({});
     }
-    const deleteHandler = async ()=>{
+    const deleteHandler = async () => {
         setIsLoading(true);
-            try {
-                await PostModel.deletePostById(postId, userAccessToken);
-                setIsLoading(false);
-                navigation.navigate('Home')
-            } catch (err) {
-                console.log("fail to delete a post: " + err)
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to delete a post"
-                });
-                setIsLoading(false);
-            }
-        
+        try {
+            await PostModel.deletePostById(postId, userAccessToken);
+            setIsLoading(false);
+            navigation.navigate('Home')
+        } catch (err) {
+            console.log("fail to delete a post: " + err)
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: "fail to delete a post"
+            });
+            setIsLoading(false);
+        }
+
     }
     const deletePost = () => {
         Alert.alert('Delete Posr', 'Are you sure you want to delete this post?', [
@@ -190,82 +192,77 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView >
-                {isLoading && <ActivityIndicator style={{
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    justifyContent: "center",
-                    alignItems: "center", margin: 5
-                }} color={"#0000ff"} size="large" />}
-                <View style={styles.container}>
-                    <View style={styles.header}>
-                        <Image
-                            source={{ uri: profileImage }}
-                            style={styles.profileImage}
-                        />
-                        <Text style={styles.username}>{firstName} {lastName}</Text>
-                        <TouchableOpacity style={styles.headerButton} onPress={updateCallback}>
-                            <Text>Update</Text>
+            {isLoading ? <Loading /> :
+                <ScrollView >
+
+                    <View style={styles.container}>
+                        <View style={styles.header}>
+                            <Image
+                                source={{ uri: profileImage }}
+                                style={styles.profileImage}
+                            />
+                            <Text style={styles.username}>{firstName} {lastName}</Text>
+                        </View>
+                        <View style={styles.content}>
+                            <TextInput
+                                placeholder="What's on your mind?"
+                                value={postText}
+                                onChangeText={setPostText}
+                                style={styles.input}
+                                multiline
+                            />
+                            {postImage != '' &&
+                                <View>
+                                    <Image source={{ uri: postImage }} style={styles.imagePreview} />
+                                    <TouchableOpacity style={styles.deleteButton} onPress={deletePhoto}>
+                                        <Text>Delete Photo</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            }
+                        </View>
+                        <TouchableOpacity style={styles.button} onPress={openCamera}>
+                            <Text style={styles.buttonText}>Upload From Camera</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={openGallery}>
+                            <Text style={styles.buttonText}>Upload From Gallery</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.updateButton} onPress={updateCallback}>
+                            <Text style={styles.updateButtonText}>Update</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={deletePost} >
+                            <Ionicons name={'trash'} color={Colors.delete} style={styles.deletePostButton} size={40} />
+                        </TouchableOpacity>
+                        <Toast />
                     </View>
-                    <View style={styles.content}>
-                        <TextInput
-                            placeholder="What's on your mind?"
-                            value={postText}
-                            onChangeText={setPostText}
-                            style={styles.input}
-                            multiline
-                        />
-                        {postImage != '' &&
-                            <View>
-                                <Image source={{ uri: postImage }} style={styles.imagePreview} />
-                                <TouchableOpacity style={styles.deleteButton} onPress={deletePhoto}>
-                                    <Text>Delete Photo</Text>
-                                </TouchableOpacity>
-                            </View>
-                        }
-
-                    </View>
-
-                    <TouchableOpacity style={styles.button} onPress={openCamera}>
-                        <Text>Upload From Camera</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={openGallery}>
-                        <Text>Upload From Gallery</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={updateCallback}>
-                        <Text>Update</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={deletePost} >
-                        <Ionicons name={'trash'} style={styles.deletePostButton} size={40} />
-                    </TouchableOpacity>
-                    <Toast />
-                </View>
-            </ScrollView >
+                </ScrollView >
+            }
         </SafeAreaView>
-
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: Colors.background,
         paddingHorizontal: 10,
-        marginTop: StatusBar.currentHeight
     },
     button: {
         alignItems: 'center',
-        backgroundColor: '#DDDDDD',
+        backgroundColor: Colors.blue,
         padding: 10,
         margin: 10,
-        borderRadius: 30
+        borderRadius: 30,
+    },
+    updateButton: {
+        alignItems: 'center',
+        backgroundColor: Colors.green,
+        padding: 10,
+        margin: 10,
+        borderRadius: 30,
     },
     deleteButton: {
         alignItems: 'center',
-        backgroundColor: '#FF5974',
+        backgroundColor: Colors.delete,
         padding: 10,
         margin: 10,
         borderRadius: 30
@@ -274,20 +271,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         alignSelf: 'center',
     },
-    headerButton: {
-        position: 'absolute',
-        alignItems: 'center',
-        backgroundColor: '#00ADAD',
-        padding: 10,
-        margin: 10,
-        borderRadius: 30,
-        bottom: -10,
-        right: 10,
-    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 10,
+        marginTop: 10
     },
     profileImage: {
         width: 40,
@@ -298,12 +286,14 @@ const styles = StyleSheet.create({
     username: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: Colors.text
     },
     content: {
         flex: 1,
     },
     input: {
         borderWidth: 1,
+        color: Colors.text,
         borderColor: '#ccc',
         borderRadius: 10,
         padding: 10,
@@ -316,6 +306,14 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginBottom: 10,
         borderRadius: 10,
+    },
+    buttonText: {
+        textAlign: 'center',
+        color: 'white'
+    },
+    updateButtonText: {
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
 
 });

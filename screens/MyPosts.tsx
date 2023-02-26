@@ -4,6 +4,7 @@ import { View, Text, FlatList, Image, StyleSheet, SafeAreaView, StatusBar, Touch
 import { useSelector } from 'react-redux';
 import PostModel from '../models/PostModel';
 import Post from '../Components/Post';
+import Colors from '../tools/Colors';
 
 const MyPosts: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [posts, setPosts] = useState<Array<any>>([]);
@@ -39,7 +40,7 @@ const MyPosts: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: Colors.primary,
         padding: 10,
         // marginTop: StatusBar.currentHeight
     },

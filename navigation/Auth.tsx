@@ -3,13 +3,21 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import BottomTabNavigator from './BottomTabNavigator';
+import Colors from '../tools/Colors';
 
 const Stack = createNativeStackNavigator();
 // Navigator, Screen, Group
 
 function Auth() {
     return (
-        <Stack.Navigator screenOptions={{}} initialRouteName={"Login"}>
+        <Stack.Navigator 
+            screenOptions={{
+                headerTitleAlign: 'center', headerTitleStyle: {
+                    color: Colors.text
+                },
+                headerStyle: { backgroundColor: Colors.header }
+            }}
+            initialRouteName={"Login"}>
             <Stack.Screen
                 name={"Login"}
                 component={LoginScreen}
@@ -17,12 +25,11 @@ function Auth() {
             <Stack.Screen
                 name={"Signup"}
                 component={SignupScreen}
-                options={{ headerShown: false }}
             />
             <Stack.Screen
                 name={"Home"}
                 component={BottomTabNavigator}
-                options={{ headerShown: false }}
+                options={{ headerShown: false}}
             />
         </Stack.Navigator>
     );

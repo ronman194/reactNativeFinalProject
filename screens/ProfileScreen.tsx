@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import uploadToCloudinary from '../api/cloudinaryApi';
 import store from '../redux/store';
 import Toast from 'react-native-toast-message';
+import Colors from '../tools/Colors';
 
 
 
@@ -142,9 +143,9 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     }
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={styles.container}>
             <ScrollView>
-                <View style={{ flex: 1, justifyContent: 'center', marginTop: StatusBar.currentHeight }}>
+                <View style={styles.container}>
                     {isLoading && <ActivityIndicator style={{
                         position: "absolute",
                         top: 0,
@@ -154,13 +155,10 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                         justifyContent: "center",
                         alignItems: "center", margin: 5
                     }} color={"#0000ff"} size="large" />}
-                    <View>
-                        {profileImage === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
-                        {profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
-                            <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
-                        {/* {profileImage != "../assets/user.png" && <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image>} */}
-                        {/* {profileImageUri === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
-                    {profileImageUri != "../assets/user.png" && <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>} */}
+                    <View style={styles.container}>
+                        {profileImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image> :
+                            profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
+                                <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
                         <TouchableOpacity onPress={openCamera} >
                             <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
                         </TouchableOpacity>
@@ -183,10 +181,10 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                         placeholder={'Enter your last name'}
                     />
 
-                    <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.button}>
+                    <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.updateButton}>
                         <Text style={styles.buttonText}>UPDATE</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.button}>
+                    <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.logoutButton}>
                         <Text style={styles.buttonText}>Log Out</Text>
                     </TouchableOpacity>
                 </View>
@@ -196,11 +194,15 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: Colors.background
+    },
     imageProfile: {
         height: 300,
         alignSelf: 'center',
         width: 300,
-        marginTop: 25,
         marginBottom: 30,
         borderRadius: 150,
     },
@@ -210,6 +212,7 @@ const styles = StyleSheet.create({
         left: 10,
         width: 50,
         height: 50,
+        color: Colors.text
     },
     galleryButton: {
         position: 'absolute',
@@ -217,6 +220,7 @@ const styles = StyleSheet.create({
         right: 10,
         width: 50,
         height: 50,
+        color: Colors.text
     },
     input: {
         height: 40,
@@ -224,24 +228,37 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
         borderRadius: 5,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: Colors.text
     },
     inputTitle: {
         marginTop: 5,
         fontWeight: 'bold',
         fontSize: 26,
-        textAlign: 'center'
+        textAlign: 'center',
+        color: Colors.text
     },
 
     buttonText: {
         textAlign: 'center',
-        color: 'white'
+        fontWeight:'bold'
     },
-    button: {
+    updateButton: {
         flex: 1,
         margin: 12,
         padding: 12,
-        backgroundColor: '#ac2378',
+        backgroundColor: Colors.green,
+        // backgroundColor: '#ac2378',
+        borderRadius: 10,
+        width: 200,
+        alignSelf: 'center'
+    },
+    logoutButton: {
+        flex: 1,
+        margin: 12,
+        padding: 12,
+        backgroundColor: Colors.delete,
+        // backgroundColor: '#ac2378',
         borderRadius: 10,
         width: 200,
         alignSelf: 'center'

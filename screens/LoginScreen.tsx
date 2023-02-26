@@ -2,6 +2,7 @@ import { useState, FC, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
+import Colors from '../tools/Colors';
 
 import UserModel, { loginUser } from '../models/UserModel';
 import Toast from 'react-native-toast-message';
@@ -58,6 +59,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     onChangeText={setEmail}
                     value={email}
                     placeholder={'Enter Email'}
+                    placeholderTextColor={Colors.text}
                     underlineColorAndroid="transparent"
                 />
             </View>
@@ -68,6 +70,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     onChangeText={setPassword}
                     value={password}
                     placeholder={'Enter Password'}
+                    placeholderTextColor={Colors.text}
                     secureTextEntry={true}
                     underlineColorAndroid="transparent"
                 />
@@ -77,9 +80,9 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={{}}
                 onPress={() => { navigation.navigate("Signup") }}>
-                <Text>Sign up</Text>
+                <Text style={styles.signuptext}
+                >Sign up</Text>
             </TouchableOpacity>
             <Toast />
 
@@ -93,13 +96,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#DCDCDC',
+        backgroundColor: Colors.background,
     },
     inputContainer: {
-        borderBottomColor: '#F5FCFF',
-        backgroundColor: '#FFFFFF',
+        borderBottomColor: Colors.text,
+        backgroundColor: Colors.primary,
         borderRadius: 30,
-        borderBottomWidth: 1,
         width: 250,
         height: 45,
         marginBottom: 20,
@@ -109,14 +111,15 @@ const styles = StyleSheet.create({
     inputs: {
         height: 45,
         marginLeft: 16,
-        borderBottomColor: '#FFFFFF',
         flex: 1,
+        color: Colors.text,
     },
     inputIcon: {
         width: 30,
         height: 30,
         marginLeft: 15,
         justifyContent: 'center',
+        color: Colors.text
     },
     buttonContainer: {
         height: 45,
@@ -128,11 +131,14 @@ const styles = StyleSheet.create({
         borderRadius: 30,
     },
     loginButton: {
-        backgroundColor: '#00b5ec',
+        backgroundColor: Colors.blue,
     },
     loginText: {
-        color: 'white',
+        color: Colors.text,
     },
+    signuptext: {
+        color: Colors.pink
+    }
 });
 
 export default LoginScreen

@@ -5,6 +5,7 @@ import UserModel, { User } from '../models/UserModel';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import store from '../redux/store';
+import Colors from '../tools/Colors';
 
 
 
@@ -60,6 +61,7 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
                     onChangeText={setFirstName}
                     value={firstName}
                     placeholder={'First Name'}
+                    placeholderTextColor={Colors.text}
                     underlineColorAndroid="transparent"
                 />
             </View>
@@ -71,6 +73,7 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
                     onChangeText={setLastName}
                     value={lastName}
                     placeholder={'Last Name'}
+                    placeholderTextColor={Colors.text}
                     underlineColorAndroid="transparent"
                 />
             </View>
@@ -82,6 +85,7 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
                     onChangeText={setEmail}
                     value={email}
                     placeholder={'Enter Email'}
+                    placeholderTextColor={Colors.text}
                     underlineColorAndroid="transparent"
                 />
             </View>
@@ -92,18 +96,19 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
                     onChangeText={setPassword}
                     value={password}
                     placeholder={'Enter Password'}
+                    placeholderTextColor={Colors.text}
                     secureTextEntry={true}
                     underlineColorAndroid="transparent"
                 />
             </View>
             <TouchableOpacity onPress={onSaveCallback} style={[styles.buttonContainer, styles.loginButton]}
             >
-                <Text style={styles.loginText}>Sign Up</Text>
+                <Text style={styles.signupText}>Sign Up</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={{}}
                 onPress={() => { navigation.navigate("Login") }}>
-                <Text>Login</Text>
+                <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
             <Toast />
         </View>
@@ -116,13 +121,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#DCDCDC',
+        backgroundColor: Colors.background,
     },
     inputContainer: {
-        borderBottomColor: '#F5FCFF',
-        backgroundColor: '#FFFFFF',
+        borderBottomColor: Colors.text,
+        backgroundColor: Colors.primary,
         borderRadius: 30,
-        borderBottomWidth: 1,
         width: 250,
         height: 45,
         marginBottom: 20,
@@ -132,14 +136,15 @@ const styles = StyleSheet.create({
     inputs: {
         height: 45,
         marginLeft: 16,
-        borderBottomColor: '#FFFFFF',
         flex: 1,
+        color: Colors.text,
     },
     inputIcon: {
         width: 30,
         height: 30,
         marginLeft: 15,
         justifyContent: 'center',
+        color: Colors.text
     },
     buttonContainer: {
         height: 45,
@@ -154,7 +159,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#00b5ec',
     },
     loginText: {
-        color: 'white',
+        color: Colors.pink,
+    },
+    signupText: {
+        color: Colors.text,
     },
 });
 

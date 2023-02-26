@@ -5,11 +5,11 @@ import { TouchableOpacity, Text } from 'react-native';
 import MyPosts from '../screens/MyPosts';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import EditPostScreen from '../screens/EditPostScreen';
+import Colors from '../tools/Colors';
 
 
 
 const Stack = createNativeStackNavigator();
-// Navigator, Screen, Group
 
 const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
 
@@ -20,25 +20,28 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
         navigation.navigate('AddPost')
     }
     return (
-        <Stack.Navigator screenOptions={{ headerTitleAlign: 'center', }}>
+        <Stack.Navigator screenOptions={{
+            headerTitleAlign: 'center', headerTitleStyle: {
+                color: Colors.text
+            },
+            headerStyle: { backgroundColor: Colors.header },
+            headerTintColor:Colors.blue,
+        }}>
             <Stack.Screen
                 name={"Home"}
                 component={Feed}
                 options={{
                     headerTitle: "Feed",
-                    headerStyle: {
-                        backgroundColor: '#f4511e',
-                    },
                     headerLeft: () => (
                         <TouchableOpacity
                             onPress={myPostHandler}>
-                            <Text>My Posts</Text>
+                            <Text style={{ fontWeight: 'bold', color: Colors.blue }}>My Posts</Text>
                         </TouchableOpacity>
                     ),
                     headerRight: () => (
                         <TouchableOpacity
                             onPress={addPostHandler}>
-                            <Ionicons name={'add-circle'} color={'#ac22ff'} size={25} />
+                            <Ionicons name={'add-circle'} color={Colors.green} size={25} />
                         </TouchableOpacity>
                     )
                 }}
@@ -51,8 +54,7 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             <Stack.Screen
                 name={"EditPost"}
                 component={EditPostScreen}
-                options={{ headerTitle: "Edit Posts" ,
-            }}
+                options={{ headerTitle: "Edit Posts" }}
             />
         </Stack.Navigator>
     );
