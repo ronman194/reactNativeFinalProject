@@ -4,6 +4,7 @@ import Feed from '../screens/PostsScreen';
 import { TouchableOpacity, Text } from 'react-native';
 import MyPosts from '../screens/MyPosts';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import EditPostScreen from '../screens/EditPostScreen';
 
 
 
@@ -46,6 +47,11 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
                 name={"MyPost"}
                 component={MyPosts}
                 options={{ headerTitle: "My Posts" }}
+            />
+            <Stack.Screen
+                name={"EditPost"}
+                component={EditPostScreen}
+                options={{ headerTitle: "Edit Posts" }}
             />
         </Stack.Navigator>
     );

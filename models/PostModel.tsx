@@ -9,6 +9,11 @@ export type Post = {
     profileImage: String,
 }
 
+export type UpdatePost = {
+    message: String,
+    updateImage: String,
+}
+
 type Likes = {
     email: String,
     firstName: String,
@@ -36,7 +41,6 @@ export type PostDetails = {
 const addPost = async (post: Post, accessToken: string) => {
     try {
         const res = await postApi.addPost(post, accessToken);
-        console.log(res.data);
         return res;
     } catch (err) {
         console.log("Fail to add a new post " + err);
@@ -44,10 +48,7 @@ const addPost = async (post: Post, accessToken: string) => {
 }
 
 const getAllPosts = async (accessToken: string) => {
-    console.log("getAllPosts")
     const res: any = await postApi.getListPost(accessToken)
-    console.log("RESSSSSSSS ")
-    console.log(res);
     let data: any = []
     if (res.data) {
         res.data.post.forEach((obj: any) => {
@@ -58,10 +59,7 @@ const getAllPosts = async (accessToken: string) => {
 }
 
 const getAllPostsBySender = async (sender: string, accessToken: string) => {
-    console.log("get posts by: " + sender)
     const res: any = await postApi.getPostsBySender(sender, accessToken)
-    console.log("RESSSSSSSS ")
-    console.log(res);
     let data: any = []
     if (res.data) {
         res.data.post.forEach((obj: any) => {
@@ -70,5 +68,13 @@ const getAllPostsBySender = async (sender: string, accessToken: string) => {
     }
     return data;
 }
+const getPostById = async (id: string, accessToken: string) => {
+    const res: any = await postApi.getPostsById(id.toString(), accessToken)
+    return res.data;
+}
+const updatePost = async (id: string, accessToken: string, updatePost: UpdatePost) => {
+    const res: any = await postApi.updatePost(id.toString(), accessToken, updatePost)
+    return res.data;
+}
 
-export default { addPost, getAllPosts, getAllPostsBySender }
+export default { addPost, getAllPosts, getAllPostsBySender, getPostById, updatePost }

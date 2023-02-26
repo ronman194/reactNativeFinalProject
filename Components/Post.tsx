@@ -7,7 +7,7 @@ const Post: FC<{ navigation: any, post: any }> =
         const userEmail = useSelector((state: any) => state.email).toLowerCase();
         const cliked = () => {
             console.log("ID " + post._id);
-            navigation.navigate("StudentAdd")
+            navigation.navigate("EditPost", { postId: post._id})
         }
         return (
             <View style={styles.postContainer}>

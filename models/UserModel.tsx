@@ -30,7 +30,6 @@ const registerUser = async (user: User) => {
 
     try {
         const res = await userApi.register(data);
-        console.log(res.data);
         return res;
     } catch (err) {
         console.log("Fail to add a student " + err);
@@ -45,7 +44,6 @@ const loginUser = async (user: loginUser) => {
 
     try {
         const res = await userApi.login(data);
-        console.log(res.data);
         return res;
     } catch (err) {
         console.log("Fail to add a student " + err);
@@ -54,7 +52,6 @@ const loginUser = async (user: loginUser) => {
 const updateUser = async (user: UpdateUser, accessToken: string) => {
     try {
         const res = await userApi.updateProfile(user, accessToken);
-        console.log(res.data);
         return res;
     } catch (err) {
         console.log("Fail to update a student " + err);

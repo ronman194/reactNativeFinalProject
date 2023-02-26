@@ -10,20 +10,14 @@ const MyPosts: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
     const userAccessToken = useSelector((state: any) => state.accessToken);
     const userEmail = useSelector((state: any) => state.email).toLowerCase();
 
-
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            console.log('focus')
             try {
                 const postsList = await PostModel.getAllPostsBySender(userEmail, userAccessToken);
                 setPosts(postsList.reverse())
-                console.log("fetching students complete");
             } catch (err) {
                 console.log("fail fetching students " + err);
             }
-            console.log("fetching finish");
-            console.log("Posts :")
-            console.log(posts)
         })
         return unsubscribe;
     }, [])

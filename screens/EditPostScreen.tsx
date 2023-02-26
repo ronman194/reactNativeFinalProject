@@ -6,9 +6,10 @@ import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
 import uploadToCloudinary from '../api/cloudinaryApi';
 import Toast from 'react-native-toast-message';
-import PostModel, { Post } from '../models/PostModel';
+import PostModel, { UpdatePost } from '../models/PostModel';
 
-const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+    const postId = JSON.stringify(route.params.postId)
     const [postText, setPostText] = useState('');
     const [postImage, setPostImage] = useState('');
     const userEmail = useSelector((state: any) => state.email);
@@ -19,6 +20,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
     const [imgSrc, setImgSrc] = useState({});
     const [cloudSrc, setCloudSrc] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [data, setData]: any = useState();
 
     const askPermission = async () => {
         try {
@@ -34,8 +36,29 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
 
     useEffect(() => {
         askPermission();
-        console.log("img src ")
+        console.log("HII " + postId)
     }, []);
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', async () => {
+            console.log('focus')
+            setIsLoading(true);
+            try {
+                const post = await PostModel.getPostById(postId, userAccessToken);
+                setData(post.post);
+                setPostText(post.post.message)
+                if (post.post.postImage != "") {
+                    setPostImage(post.post.postImage)
+                }
+                setIsLoading(false);
+            } catch (err) {
+                console.log("fail fetching post " + err);
+                setIsLoading(false);
+            }
+            setIsLoading(false);
+        })
+        return unsubscribe;
+    }, [])
 
     const openCamera = async () => {
         try {
@@ -85,24 +108,19 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
         setPostImage('');
         setImgSrc({});
     }
-    const postCallback = async () => {
+    const updateCallback = async () => {
         setIsLoading(true);
-        if (postImage != '') {
+        if (postImage != '' && postImage != data.postImage) {
             const res = await getImgCloudSrc();
             console.log("HIIJJJ " + res.data);
             setCloudSrc(res.data.url);
             console.log("PATHHHHHH " + cloudSrc)
             try {
-                const post: Post = {
+                const post: UpdatePost = {
                     message: postText,
-                    image: res.data.url,
-                    // image: res.data.url,
-                    sender: userEmail.toLowerCase(),
-                    firstName: firstName,
-                    lastName: lastName,
-                    profileImage: profileImage
+                    updateImage: res.data.url,
                 }
-                const us: any = await PostModel.addPost(post, userAccessToken);
+                const us: any = await PostModel.updatePost(postId, userAccessToken, post);
                 setIsLoading(false);
                 navigation.navigate('Posts')
             } catch (err) {
@@ -117,16 +135,11 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
         }
         else {
             try {
-                const post: Post = {
+                const post: UpdatePost = {
                     message: postText,
-                    image: '',
-                    // image: res.data.url,
-                    sender: userEmail.toLowerCase(),
-                    firstName: firstName,
-                    lastName: lastName,
-                    profileImage: profileImage
+                    updateImage: postImage,
                 }
-                const us: any = await PostModel.addPost(post, userAccessToken);
+                const us: any = await PostModel.updatePost(postId, userAccessToken,post);
                 setIsLoading(false);
                 navigation.navigate('Posts')
             } catch (err) {
@@ -144,6 +157,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
         setImgSrc({});
         setCloudSrc('');
         setIsLoading(false);
+        navigation.navigate("Home")
     }
 
     return (
@@ -164,8 +178,8 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                             style={styles.profileImage}
                         />
                         <Text style={styles.username}>{firstName} {lastName}</Text>
-                        <TouchableOpacity style={styles.headerButton} onPress={postCallback}>
-                            <Text>Post</Text>
+                        <TouchableOpacity style={styles.headerButton} onPress={updateCallback}>
+                            <Text>Update</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.content}>
@@ -193,8 +207,8 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     <TouchableOpacity style={styles.button} onPress={openGallery}>
                         <Text>Upload From Gallery</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={postCallback}>
-                        <Text>Post</Text>
+                    <TouchableOpacity style={styles.button} onPress={updateCallback}>
+                        <Text>Update</Text>
                     </TouchableOpacity>
                     <Toast />
                 </View>
@@ -271,5 +285,5 @@ const styles = StyleSheet.create({
 
 });
 
-export default AddPostPage;
+export default EditPostScreen;
 

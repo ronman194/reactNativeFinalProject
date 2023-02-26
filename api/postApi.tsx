@@ -1,5 +1,5 @@
 import apiClient from "./clientApi";
-import { Post } from "../models/PostModel";
+import { UpdatePost, Post } from "../models/PostModel";
 
 const addPost = async (post: Post, accessToken: string) => {
     apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
@@ -10,14 +10,26 @@ const getListPost = async (accessToken: string) => {
     return apiClient.get("/post");
 };
 
-const getPostsBySender = async (sender:string, accessToken: string) => {
+const getPostsBySender = async (sender: string, accessToken: string) => {
     apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
-    return apiClient.get("/post?sender="+sender);
+    return apiClient.get("/post?sender=" + sender);
+};
+
+const getPostsById = async (id: string, accessToken: string) => {
+    apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
+    return apiClient.get("/post/" + id.split('"').join(""));
+};
+
+const updatePost = async (id: string, accessToken: string, updatePost: UpdatePost) => {
+    apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
+    return apiClient.put("/post/" + id.split('"').join(""), updatePost);
 };
 
 
 export default {
     addPost,
     getListPost,
-    getPostsBySender
+    getPostsBySender,
+    getPostsById,
+    updatePost
 };
