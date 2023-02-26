@@ -17,7 +17,6 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
         }
         try {
             const us: any = await UserModel.loginUser(user);
-            console.log("US " + us)
             if (us.status === 200) {
                 store.dispatch({
                     type: 'LOGIN', accessToken: us.data.tokens.accessToken,
@@ -30,6 +29,8 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     type: 'info',
                     text1: `Login as ${email}`
                 });
+                setEmail("");
+                setPassword("");
             }
             else {
                 Toast.show({

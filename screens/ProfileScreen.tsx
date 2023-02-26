@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView, ActivityIndicator } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
 import { useSelector } from 'react-redux';
 import UserModel, { UpdateUser } from '../models/UserModel';
 import * as ImagePicker from 'expo-image-picker'
@@ -49,7 +49,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const uri = res.assets[0].uri
                 setProfileImageUri(uri)
                 const type = "image/jpg";
-                const name = Date.now()+'.jpg';
+                const name = Date.now() + '.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
                 console.log(source)
@@ -121,64 +121,77 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
         }
     }
 
-    const onCancellCallback = () => {
-        setFirstName(userFirstName);
-        setLastName(userLastName);
-        setCloudSrc(profileImage);
-        setProfileImageUri(profileImage);
+    const onLogoutCallback = async () => {
+        setIsLoading(true);
+        try {
+            store.dispatch({ type: 'LOGOUT' });
+            await UserModel.logout(userAccessToken);
+            setIsLoading(false);
+            navigation.navigate("Login");
+        } catch (err) {
+            console.log("fail to update a user: " + err)
+            Toast.show({
+                type: 'error',
+                text1: 'Error',
+                text2: "fail to logout"
+            });
+            setIsLoading(false);
+        }
+        setIsLoading(false);
+
     }
 
     return (
-        <ScrollView>
-            <View style={{ flex: 1, justifyContent: 'center', }}>
-                {isLoading && <ActivityIndicator style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    justifyContent: "center",
-                    alignItems: "center",margin:5
-                }} color={"#0000ff"} size="large" />}
-                <View>
-                    {profileImage === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
-                    {profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
-                        <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
-                    {/* {profileImage != "../assets/user.png" && <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image>} */}
-                    {/* {profileImageUri === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
+        <SafeAreaView>
+            <ScrollView>
+                <View style={{ flex: 1, justifyContent: 'center', marginTop: StatusBar.currentHeight }}>
+                    {isLoading && <ActivityIndicator style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        justifyContent: "center",
+                        alignItems: "center", margin: 5
+                    }} color={"#0000ff"} size="large" />}
+                    <View>
+                        {profileImage === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
+                        {profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
+                            <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
+                        {/* {profileImage != "../assets/user.png" && <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image>} */}
+                        {/* {profileImageUri === "../assets/user.png" && <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image>}
                     {profileImageUri != "../assets/user.png" && <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>} */}
-                    <TouchableOpacity onPress={openCamera} >
-                        <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={openGallery} >
-                        <Ionicons name={'image'} style={styles.galleryButton} size={50} />
-                    </TouchableOpacity>
-                </View>
-                <Text style={styles.inputTitle}>First Name:</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setFirstName}
-                    value={firstName}
-                    placeholder={'Enter your first name'}
-                />
-                <Text style={styles.inputTitle}>Last Name:</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setLastName}
-                    value={lastName}
-                    placeholder={'Enter your last name'}
-                />
+                        <TouchableOpacity onPress={openCamera} >
+                            <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={openGallery} >
+                            <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                        </TouchableOpacity>
+                    </View>
+                    <Text style={styles.inputTitle}>First Name:</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setFirstName}
+                        value={firstName}
+                        placeholder={'Enter your first name'}
+                    />
+                    <Text style={styles.inputTitle}>Last Name:</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setLastName}
+                        value={lastName}
+                        placeholder={'Enter your last name'}
+                    />
 
-                <View style={styles.buttonesContainer}>
-                    <TouchableOpacity disabled={isLoading} onPress={onCancellCallback} style={styles.button}>
-                        <Text style={styles.buttonText}>CANCELL</Text>
-                    </TouchableOpacity>
                     <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.button}>
                         <Text style={styles.buttonText}>UPDATE</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.button}>
+                        <Text style={styles.buttonText}>Log Out</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
@@ -207,32 +220,31 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        margin: 12,
+        margin: 8,
         borderWidth: 1,
         padding: 10,
         borderRadius: 5,
         textAlign: 'center'
     },
     inputTitle: {
-        marginTop: 20,
-        padding: 10,
+        marginTop: 5,
         fontWeight: 'bold',
         fontSize: 26,
         textAlign: 'center'
     },
-    buttonesContainer: {
-        flexDirection: 'row',
+
+    buttonText: {
+        textAlign: 'center',
+        color: 'white'
     },
     button: {
         flex: 1,
         margin: 12,
         padding: 12,
-        backgroundColor: 'blue',
+        backgroundColor: '#ac2378',
         borderRadius: 10,
-    },
-    buttonText: {
-        textAlign: 'center',
-        color: 'white'
+        width: 200,
+        alignSelf: 'center'
     }
 });
 

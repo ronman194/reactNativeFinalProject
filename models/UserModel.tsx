@@ -57,6 +57,14 @@ const updateUser = async (user: UpdateUser, accessToken: string) => {
         console.log("Fail to update a student " + err);
     }
 }
+const logout = async (accessToken: string) => {
+    try {
+        const res = await userApi.logout(accessToken);
+        return res;
+    } catch (err) {
+        console.log("Fail to logout " + err);
+    }
+}
 
 
-export default { registerUser, loginUser, updateUser }
+export default { registerUser, loginUser, updateUser, logout }

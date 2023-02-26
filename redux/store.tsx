@@ -27,7 +27,7 @@ const reducer = (state = initialState, action: any) => {
         isLoggedIn: false,
         accessToken: null,
         refreshToken: null,
-        email: null,
+        email: '',
         firstName: null,
         lastName: null,
         profileImage: null

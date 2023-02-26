@@ -49,7 +49,6 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
         } catch (err) {
             console.log("fail register user: " + err)
         }
-        // navigation.navigate("StudentList")
     }
 
     return (

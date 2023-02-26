@@ -14,10 +14,16 @@ const updateProfile = async (userJson: UpdateUser, accessToken: string) => {
   return apiClient.put("/auth/update", userJson);
 };
 
+const logout = async (accessToken: string) => {
+  apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
+  return apiClient.get("/auth/logout");
+};
+
 
 
 export default {
   register,
   login,
   updateProfile
+  ,logout
 };
