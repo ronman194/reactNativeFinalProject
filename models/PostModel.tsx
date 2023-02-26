@@ -68,13 +68,20 @@ const getAllPostsBySender = async (sender: string, accessToken: string) => {
     }
     return data;
 }
+
 const getPostById = async (id: string, accessToken: string) => {
     const res: any = await postApi.getPostsById(id.toString(), accessToken)
     return res.data;
 }
+
+const deletePostById = async (id: string, accessToken: string) => {
+    const res: any = await postApi.deletePostsById(id.toString(), accessToken)
+    return res.data;
+}
+
 const updatePost = async (id: string, accessToken: string, updatePost: UpdatePost) => {
     const res: any = await postApi.updatePost(id.toString(), accessToken, updatePost)
     return res.data;
 }
 
-export default { addPost, getAllPosts, getAllPostsBySender, getPostById, updatePost }
+export default { addPost, getAllPosts, getAllPostsBySender, getPostById, updatePost,deletePostById }

@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
@@ -108,6 +108,34 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
         setPostImage('');
         setImgSrc({});
     }
+    const deleteHandler = async ()=>{
+        setIsLoading(true);
+            try {
+                await PostModel.deletePostById(postId, userAccessToken);
+                setIsLoading(false);
+                navigation.navigate('Home')
+            } catch (err) {
+                console.log("fail to delete a post: " + err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: "fail to delete a post"
+                });
+                setIsLoading(false);
+            }
+        
+    }
+    const deletePost = () => {
+        Alert.alert('Delete Posr', 'Are you sure you want to delete this post?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            { text: 'Delete', onPress: deleteHandler },
+        ]);
+    }
+
     const updateCallback = async () => {
         setIsLoading(true);
         if (postImage != '' && postImage != data.postImage) {
@@ -139,7 +167,7 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                     message: postText,
                     updateImage: postImage,
                 }
-                const us: any = await PostModel.updatePost(postId, userAccessToken,post);
+                const us: any = await PostModel.updatePost(postId, userAccessToken, post);
                 setIsLoading(false);
                 navigation.navigate('Posts')
             } catch (err) {
@@ -210,6 +238,9 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                     <TouchableOpacity style={styles.button} onPress={updateCallback}>
                         <Text>Update</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity onPress={deletePost} >
+                        <Ionicons name={'trash'} style={styles.deletePostButton} size={40} />
+                    </TouchableOpacity>
                     <Toast />
                 </View>
             </ScrollView >
@@ -238,6 +269,10 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 10,
         borderRadius: 30
+    },
+    deletePostButton: {
+        alignItems: 'center',
+        alignSelf: 'center',
     },
     headerButton: {
         position: 'absolute',

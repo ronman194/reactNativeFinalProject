@@ -51,7 +51,8 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             <Stack.Screen
                 name={"EditPost"}
                 component={EditPostScreen}
-                options={{ headerTitle: "Edit Posts" }}
+                options={{ headerTitle: "Edit Posts" ,
+            }}
             />
         </Stack.Navigator>
     );

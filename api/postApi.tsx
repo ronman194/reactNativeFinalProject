@@ -19,6 +19,10 @@ const getPostsById = async (id: string, accessToken: string) => {
     apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
     return apiClient.get("/post/" + id.split('"').join(""));
 };
+const deletePostsById = async (id: string, accessToken: string) => {
+    apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
+    return apiClient.delete("/post/" + id.split('"').join(""));
+};
 
 const updatePost = async (id: string, accessToken: string, updatePost: UpdatePost) => {
     apiClient.setHeaders({ 'Authorization': 'JWT ' + accessToken })
@@ -31,5 +35,6 @@ export default {
     getListPost,
     getPostsBySender,
     getPostsById,
-    updatePost
+    updatePost,
+    deletePostsById
 };

@@ -1,3 +1,4 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -7,7 +8,7 @@ const Post: FC<{ navigation: any, post: any }> =
         const userEmail = useSelector((state: any) => state.email).toLowerCase();
         const cliked = () => {
             console.log("ID " + post._id);
-            navigation.navigate("EditPost", { postId: post._id})
+            navigation.navigate("EditPost", { postId: post._id })
         }
         return (
             <View style={styles.postContainer}>
