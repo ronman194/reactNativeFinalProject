@@ -8,6 +8,7 @@ import uploadToCloudinary from '../api/cloudinaryApi';
 import store from '../redux/store';
 import Toast from 'react-native-toast-message';
 import Colors from '../tools/Colors';
+import Loading from '../Components/Loading';
 
 
 
@@ -24,6 +25,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     const [imgSrc, setImgSrc] = useState({});
     const [cloudSrc, setCloudSrc] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [update, setUpdate] = useState(false);
 
 
 
@@ -53,6 +55,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const name = Date.now() + '.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
+                setUpdate(true)
                 console.log(source)
             }
 
@@ -72,6 +75,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const source = { uri, type, name };
                 setImgSrc(source);
                 console.log(source)
+                setUpdate(true)
             }
 
         } catch (err) {
@@ -92,34 +96,65 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
 
     const onSaveCallback = async () => {
         setIsLoading(true);
-        const res = await getImgCloudSrc();
-        setCloudSrc(res.data.url);
-        console.log("PATHHHHHH " + cloudSrc)
-        try {
-            store.dispatch({
-                type: 'UPDATE_USER', accessToken: userAccessToken,
-                refreshToken: userRefreshToken, email: userEmail,
-                firstName: firstName, lastName: lastName,
-                profileImage: res.data.url
-            });
-            const user: UpdateUser = {
-                firstName: firstName,
-                lastName: lastName,
-                email: userEmail,
-                profileImage: res.data.url
+        if (update) {
+            const res = await getImgCloudSrc();
+            setCloudSrc(res.data.url);
+            console.log("PATHHHHHH " + cloudSrc)
+            try {
+                store.dispatch({
+                    type: 'UPDATE_USER', accessToken: userAccessToken,
+                    refreshToken: userRefreshToken, email: userEmail,
+                    firstName: firstName, lastName: lastName,
+                    profileImage: res.data.url
+                });
+                const user: UpdateUser = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: userEmail,
+                    profileImage: res.data.url
+                }
+                const us: any = await UserModel.updateUser(user, userAccessToken);
+                setIsLoading(false);
+                navigation.navigate("Posts")
+            } catch (err) {
+                console.log("fail to update a user: " + err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: "fail to update a user"
+                });
+                setIsLoading(false);
             }
-            const us: any = await UserModel.updateUser(user, userAccessToken);
-            setIsLoading(false);
-            navigation.goBack()
-        } catch (err) {
-            console.log("fail to update a user: " + err)
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: "fail to update a user"
-            });
-            setIsLoading(false);
         }
+        else{
+            try {
+                store.dispatch({
+                    type: 'UPDATE_USER', accessToken: userAccessToken,
+                    refreshToken: userRefreshToken, email: userEmail,
+                    firstName: firstName, lastName: lastName,
+                    profileImage: profileImage
+                });
+                const user: UpdateUser = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: userEmail,
+                    profileImage: profileImage
+                }
+                const us: any = await UserModel.updateUser(user, userAccessToken);
+                setIsLoading(false);
+                navigation.navigate("Posts")
+            } catch (err) {
+                console.log("fail to update a user: " + err)
+                Toast.show({
+                    type: 'error',
+                    text1: 'Error',
+                    text2: "fail to update a user"
+                });
+                setIsLoading(false);
+            }
+        }
+        setIsLoading(false);
+
     }
 
     const onLogoutCallback = async () => {
@@ -144,51 +179,44 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView>
-                <View style={styles.container}>
-                    {isLoading && <ActivityIndicator style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        justifyContent: "center",
-                        alignItems: "center", margin: 5
-                    }} color={"#0000ff"} size="large" />}
+            {isLoading ? <Loading /> :
+                <ScrollView>
                     <View style={styles.container}>
-                        {profileImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image> :
-                            profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
-                                <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
-                        <TouchableOpacity onPress={openCamera} >
-                            <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                        <View style={styles.container}>
+                            {profileImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image> :
+                                profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
+                                    <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
+                            <TouchableOpacity onPress={openCamera} >
+                                <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={openGallery} >
+                                <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.inputTitle}>First Name:</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setFirstName}
+                            value={firstName}
+                            placeholder={'Enter your first name'}
+                        />
+                        <Text style={styles.inputTitle}>Last Name:</Text>
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setLastName}
+                            value={lastName}
+                            placeholder={'Enter your last name'}
+                        />
+
+                        <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.updateButton}>
+                            <Text style={styles.buttonText}>UPDATE</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={openGallery} >
-                            <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                        <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.logoutButton}>
+                            <Text style={styles.buttonText}>Log Out</Text>
                         </TouchableOpacity>
                     </View>
-                    <Text style={styles.inputTitle}>First Name:</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setFirstName}
-                        value={firstName}
-                        placeholder={'Enter your first name'}
-                    />
-                    <Text style={styles.inputTitle}>Last Name:</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setLastName}
-                        value={lastName}
-                        placeholder={'Enter your last name'}
-                    />
-
-                    <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.updateButton}>
-                        <Text style={styles.buttonText}>UPDATE</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.logoutButton}>
-                        <Text style={styles.buttonText}>Log Out</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                </ScrollView>
+            }
         </SafeAreaView>
     );
 }
@@ -241,7 +269,7 @@ const styles = StyleSheet.create({
 
     buttonText: {
         textAlign: 'center',
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
     updateButton: {
         flex: 1,
