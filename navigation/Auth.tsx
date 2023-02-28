@@ -4,33 +4,42 @@ import LoginScreen from '../screens/LoginScreen';
 import SignupScreen from '../screens/SignupScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import Colors from '../tools/Colors';
+import { useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const Stack = createNativeStackNavigator();
 // Navigator, Screen, Group
 
 function Auth() {
+    const isLoggedIn = useSelector((state: any) => state.isLoggedIn);
     return (
-        <Stack.Navigator 
+        <Stack.Navigator
             screenOptions={{
                 headerTitleAlign: 'center', headerTitleStyle: {
-                    color: Colors.text
+                    color: 'white'
                 },
                 headerStyle: { backgroundColor: Colors.header }
-            }}
-            initialRouteName={"Login"}>
-            <Stack.Screen
-                name={"Login"}
-                component={LoginScreen}
-            />
-            <Stack.Screen
-                name={"Signup"}
-                component={SignupScreen}
-            />
-            <Stack.Screen
-                name={"Home"}
-                component={BottomTabNavigator}
-                options={{ headerShown: false}}
-            />
+            }}>
+            {!isLoggedIn ?
+                <Stack.Group >
+                    <Stack.Screen
+                        name={"Login"}
+                        component={LoginScreen}
+                    />
+                    <Stack.Screen
+                        name={"Signup"}
+                        component={SignupScreen}
+                    />
+                </Stack.Group> :
+                <Stack.Group >
+
+                    <Stack.Screen
+                        name={"Home"}
+                        component={BottomTabNavigator}
+                        options={{ headerShown: false }}
+                    />
+                </Stack.Group>}
         </Stack.Navigator>
     );
 }

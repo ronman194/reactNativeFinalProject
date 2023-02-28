@@ -7,31 +7,34 @@ import Post from '../Components/Post';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
 
-const Feed: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+
+const UserPostsScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [posts, setPosts] = useState<Array<any>>([]);
     const userAccessToken = useSelector((state: any) => state.accessToken);
-    const [loading, setLoadinge] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const userEmail = (route.params.userEmail)
+
 
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            setLoadinge(true);
+            setIsLoading(true);
+            console.log(userEmail);
             try {
-                const postsList = await PostModel.getAllPosts(userAccessToken);
+                const postsList = await PostModel.getAllPostsBySender(userEmail, userAccessToken);
                 setPosts(postsList.reverse());
-                setLoadinge(false);
+                setIsLoading(false);
             } catch (err) {
-                console.log("fail fetching students " + err);
-                setLoadinge(false);
+                setIsLoading(false);
             }
-        })
-        setLoadinge(false);
+        });
+        setIsLoading(false);
         return unsubscribe;
     }, [])
 
     return (
         <SafeAreaView style={styles.container}>
-            {loading ? <Loading /> :
+            {isLoading ? <Loading /> :
                 <View style={styles.container}>
                     <FlatList
                         data={posts}
@@ -44,48 +47,14 @@ const Feed: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     );
 };
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.background,
+        backgroundColor: Colors.primary,
         padding: 10,
         // marginTop: StatusBar.currentHeight
-
     },
-    postContainer: {
-        backgroundColor: Colors.primary,
-        borderRadius: 10,
-        marginBottom: 10,
-        marginHorizontal: 15,
-        padding: 10,
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    avatar: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        marginRight: 10,
-    },
-    username: {
-        fontWeight: 'bold',
-    },
-    postImage: {
-        width: '100%',
-        height: 200,
-        marginBottom: 10,
-    },
-    caption: {
-        fontSize: 16,
-    },
-    editPostButton: {
-        fontWeight: 'bold',
-        alignSelf: 'flex-end',
-        marginLeft: 120
-    }
 });
 
-export default Feed;
+export default UserPostsScreen;

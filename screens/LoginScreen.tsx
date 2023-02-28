@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInp
 import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
 import Colors from '../tools/Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import UserModel, { loginUser } from '../models/UserModel';
 import Toast from 'react-native-toast-message';
@@ -25,7 +26,9 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     firstName: us.data.user.firstName, lastName: us.data.user.lastName,
                     profileImage: us.data.user.profileImage
                 });
-                navigation.navigate('Home');
+                // navigation.navigate('Home');
+                // navigation.navigate('Home');
+                AsyncStorage.setItem('userConnected', 'true');
                 Toast.show({
                     type: 'info',
                     text1: `Login as ${email}`

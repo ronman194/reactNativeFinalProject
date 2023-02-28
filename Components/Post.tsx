@@ -11,10 +11,17 @@ const Post: FC<{ navigation: any, post: any }> =
             console.log("ID " + post._id);
             navigation.navigate("EditPost", { postId: post._id })
         }
+        const profileImageClicked = () => {
+            console.log("HIII")
+            console.log("ID " + post._id);
+            navigation.navigate("UserPosts", { userEmail: post.sender })
+        }
         return (
             <View style={styles.postContainer}>
                 <View style={styles.header}>
-                    <Image style={styles.avatar} source={{ uri: post.senderProfileImage }} />
+                    <TouchableOpacity onPress={profileImageClicked}>
+                        <Image style={styles.avatar} source={{ uri: post.senderProfileImage }} />
+                    </TouchableOpacity>
                     <Text style={styles.username}>{post.senderFirstName} {post.senderLastName}</Text>
                     {userEmail === post.sender &&
                         <TouchableOpacity onPress={cliked} >

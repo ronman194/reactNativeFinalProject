@@ -6,6 +6,7 @@ import MyPosts from '../screens/MyPosts';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import EditPostScreen from '../screens/EditPostScreen';
 import Colors from '../tools/Colors';
+import UserPostsScreen from '../screens/UserPostsScreen';
 
 
 
@@ -25,7 +26,7 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
                 color: Colors.text
             },
             headerStyle: { backgroundColor: Colors.header },
-            headerTintColor:Colors.blue,
+            headerTintColor: Colors.blue,
         }}>
             <Stack.Screen
                 name={"Home"}
@@ -55,6 +56,11 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
                 name={"EditPost"}
                 component={EditPostScreen}
                 options={{ headerTitle: "Edit Posts" }}
+            />
+            <Stack.Screen
+                name={"UserPosts"}
+                component={UserPostsScreen}
+                options={({ route }) => ({ title: (route.params as { userEmail: string }).userEmail + ' Posts' })}
             />
         </Stack.Navigator>
     );

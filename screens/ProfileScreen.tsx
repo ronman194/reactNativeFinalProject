@@ -9,6 +9,8 @@ import store from '../redux/store';
 import Toast from 'react-native-toast-message';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 
 
@@ -163,7 +165,8 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
             store.dispatch({ type: 'LOGOUT' });
             await UserModel.logout(userAccessToken);
             setIsLoading(false);
-            navigation.navigate("Login");
+            AsyncStorage.removeItem('userConnected');
+            // navigation.navigate("Login");
         } catch (err) {
             console.log("fail to update a user: " + err)
             Toast.show({
