@@ -48,14 +48,18 @@ const addPost = async (post: Post, accessToken: string) => {
 }
 
 const getAllPosts = async (accessToken: string) => {
-    const res: any = await postApi.getListPost(accessToken)
-    let data: any = []
-    if (res.data) {
-        res.data.post.forEach((obj: any) => {
-            data.push(obj)
-        });
+    try {
+        const res: any = await postApi.getListPost(accessToken)
+        let data: any = []
+        if (res.data) {
+            res.data.post.forEach((obj: any) => {
+                data.push(obj)
+            });
+        }
+        return data;
+    } catch (err) {
+        console.log("Fail to get posts " + err);
     }
-    return data;
 }
 
 const getAllPostsBySender = async (sender: string, accessToken: string) => {
@@ -84,4 +88,4 @@ const updatePost = async (id: string, accessToken: string, updatePost: UpdatePos
     return res.data;
 }
 
-export default { addPost, getAllPosts, getAllPostsBySender, getPostById, updatePost,deletePostById }
+export default { addPost, getAllPosts, getAllPostsBySender, getPostById, updatePost, deletePostById }
