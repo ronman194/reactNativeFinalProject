@@ -1,21 +1,28 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import React, { FC } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { FC, useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { useSelector } from 'react-redux';
 import Colors from '../tools/Colors';
+
+
 
 const Post: FC<{ navigation: any, post: any }> =
     ({ navigation, post }) => {
         const userEmail = useSelector((state: any) => state.email).toLowerCase();
+        const [modalVisible, setModalVisible] = useState(false);
+
         const cliked = () => {
-            console.log("ID " + post._id);
             navigation.navigate("EditPost", { postId: post._id })
         }
+
         const profileImageClicked = () => {
-            console.log("HIII")
-            console.log("ID " + post._id);
             navigation.navigate("UserPosts", { userEmail: post.sender })
         }
+
+        const handleImagePress = () => {
+            setModalVisible(true);
+        };
+
         return (
             <View style={styles.postContainer}>
                 <View style={styles.header}>
@@ -32,7 +39,23 @@ const Post: FC<{ navigation: any, post: any }> =
                             <Text style={styles.editPostButton}>Edit Post</Text>
                         </TouchableOpacity>}
                 </View>
-                {post.postImage && <Image style={styles.postImage} source={{ uri: post.postImage }} />}
+                {post.postImage && 
+                <><TouchableOpacity onPress={handleImagePress}>
+                        <Image
+                            style={styles.postImage}
+                            source={{ uri: post.postImage }} />
+                    </TouchableOpacity><Modal visible={modalVisible} transparent={true}>
+                            <TouchableOpacity
+                                style={styles.modal}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Image
+                                    style={styles.modalImage}
+                                    source={{ uri: post.postImage }} />
+                            </TouchableOpacity>
+                        </Modal></>
+                    // <Image style={styles.postImage} source={{ uri: post.postImage }} />
+                }
                 <Text style={styles.caption}>{post.message}</Text>
             </View>
         );
@@ -75,7 +98,18 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginLeft: 120,
         color: Colors.text
-    }
+    },
+    modal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+      },
+      modalImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+      },
 });
 
 export default Post;
