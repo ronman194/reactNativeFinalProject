@@ -197,10 +197,15 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
 
                     <View style={styles.container}>
                         <View style={styles.header}>
-                            <Image
+                            {
+                                profileImage === '../assets/user.png' ?
+                                    <Image style={styles.profileImage} source={require('../assets/user.png')} /> :
+                                    <Image style={styles.profileImage} source={{ uri: profileImage }} />
+                            }
+                            {/* <Image
                                 source={{ uri: profileImage }}
                                 style={styles.profileImage}
-                            />
+                            /> */}
                             <Text style={styles.username}>{firstName} {lastName}</Text>
                         </View>
                         <View style={styles.content}>

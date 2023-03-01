@@ -163,7 +163,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
         setIsLoading(true);
         try {
             store.dispatch({ type: 'LOGOUT' });
-            await UserModel.logout(userAccessToken);
+            await UserModel.logout(userRefreshToken);
             setIsLoading(false);
             AsyncStorage.removeItem('userConnected');
             // navigation.navigate("Login");
