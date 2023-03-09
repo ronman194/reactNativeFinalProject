@@ -9,7 +9,7 @@ import AddPost from '../screens/AddPost';
 import Feed from '../screens/PostsScreen';
 import PostStack from './PostStack';
 import Colors from '../tools/Colors';
-
+import Chat from '../screens/Chat';
 
 const Tab = createBottomTabNavigator();
 
@@ -37,6 +37,9 @@ function BottomTabNavigator() {
                 else if (route.name === 'Posts') {
                     iconName = focused ? 'home' : 'home-outline';
                 }
+                else if (route.name === 'Chat') {
+                    iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+                }
                 // You can return any component that you like here!
                 return <Ionicons name={iconName} size={size} color={color} />;
             },
@@ -54,6 +57,7 @@ function BottomTabNavigator() {
             <Tab.Screen name="Posts" component={PostStack} options={{ headerShown: false }} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="AddPost" component={AddPost} />
+            <Tab.Screen name="Chat" component={Chat} />
         </Tab.Navigator>
     );
 }

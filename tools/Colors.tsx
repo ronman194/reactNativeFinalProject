@@ -8,6 +8,7 @@ const Colors = {
     blue: '#00b5ec',
     pink: '#Dda9e6',
     delete:'#FF5974',
-    green:'#5ef78a'
+    green:'#5ef78a',
+    chat: '#075E54'
 };
 export default Colors;
