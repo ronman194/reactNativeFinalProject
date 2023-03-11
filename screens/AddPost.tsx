@@ -4,10 +4,12 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
 import uploadToCloudinary from '../api/cloudinaryApi';
-import Toast from 'react-native-toast-message';
 import PostModel, { Post } from '../models/PostModel';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
+import {showSuccessToast, showErrorToast} from '../tools/ToastMessage'
+
+
 
 const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [postText, setPostText] = useState('');
@@ -84,6 +86,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
         setImgSrc({});
     }
     const postCallback = async () => {
+        if(postImage =='' && postText == ''){
+            showErrorToast("please provie valid data")
+            return;
+        }
         setIsLoading(true);
         if (postImage != '') {
             const res = await getImgCloudSrc();
@@ -100,13 +106,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 }
                 const us: any = await PostModel.addPost(post, userAccessToken);
                 setIsLoading(false);
+                showSuccessToast('Post Added successfully')
                 navigation.navigate('Posts')
             } catch (err) {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to upload a post"
-                });
+                showErrorToast("fail to upload a post")
                 setIsLoading(false);
             }
         }
@@ -123,13 +126,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 }
                 const us: any = await PostModel.addPost(post, userAccessToken);
                 setIsLoading(false);
+                showSuccessToast('Post Added successfully')
                 navigation.navigate('Posts')
             } catch (err) {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to upload a post"
-                });
+                showErrorToast("fail to upload a post")
                 setIsLoading(false);
             }
         }
@@ -182,7 +182,6 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                         <TouchableOpacity style={styles.postButton} onPress={postCallback}>
                             <Text style={{ fontWeight: 'bold', }}>Post</Text>
                         </TouchableOpacity>
-                        <Toast />
                     </View>
                 </ScrollView >
             }

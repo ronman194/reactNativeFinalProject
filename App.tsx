@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Provider } from 'react-redux';
 import store from './redux/store';
-
+import {toastConfig} from './tools/ToastMessage'
 import Auth from './navigation/Auth';
 import Toast from 'react-native-toast-message';
 
@@ -17,7 +17,7 @@ const App: FC = ({ }) => {
     <Provider store={store}>
       <NavigationContainer>
         <Auth />
-        <Toast />
+        <Toast config={toastConfig} />
       </NavigationContainer>
 
     </Provider>

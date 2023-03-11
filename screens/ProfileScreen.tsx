@@ -6,9 +6,9 @@ import * as ImagePicker from 'expo-image-picker'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import uploadToCloudinary from '../api/cloudinaryApi';
 import store from '../redux/store';
-import Toast from 'react-native-toast-message';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
+import { showSuccessToast, showErrorToast } from '../tools/ToastMessage'
 
 
 
@@ -92,6 +92,10 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     }
 
     const onSaveCallback = async () => {
+        if (userFirstName == firstName && userLastName == lastName && !update) {
+            showErrorToast('Nothing to update in profile')
+            return
+        }
         setIsLoading(true);
         if (update) {
             const res = await getImgCloudSrc();
@@ -111,14 +115,12 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 }
                 const us: any = await UserModel.updateUser(user, userAccessToken);
                 setIsLoading(false);
+                showSuccessToast("Profile Update")
                 navigation.navigate("Posts")
+                setUpdate(false)
             } catch (err) {
                 console.log("fail to update a user: " + err)
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to update a user"
-                });
+                showErrorToast('Fail to update profile')
                 setIsLoading(false);
             }
         }
@@ -138,14 +140,11 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 }
                 const us: any = await UserModel.updateUser(user, userAccessToken);
                 setIsLoading(false);
+                showSuccessToast("Profile Update")
                 navigation.navigate("Posts")
             } catch (err) {
                 console.log("fail to update a user: " + err)
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to update a user"
-                });
+                showErrorToast('Fail to update profile')
                 setIsLoading(false);
             }
         }
@@ -159,13 +158,10 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
             store.dispatch({ type: 'LOGOUT' });
             await UserModel.logout(userRefreshToken);
             setIsLoading(false);
+            showSuccessToast("Logout Success")
         } catch (err) {
             console.log("fail to update a user: " + err)
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: "fail to logout"
-            });
+            showErrorToast('Fail to logout')
             setIsLoading(false);
         }
         setIsLoading(false);
@@ -175,7 +171,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     return (
         <SafeAreaView style={styles.container}>
             {isLoading ? <Loading /> :
-                <ScrollView style={{flex:1}}>
+                <ScrollView style={{ flex: 1 }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 

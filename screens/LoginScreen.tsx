@@ -3,9 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, TextInp
 import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
 import Colors from '../tools/Colors';
-
 import UserModel, { loginUser } from '../models/UserModel';
-import Toast from 'react-native-toast-message';
+import {showSuccessToast, showErrorToast} from '../tools/ToastMessage'
 
 const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [email, setEmail] = useState("");
@@ -25,27 +24,17 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     firstName: us.data.user.firstName, lastName: us.data.user.lastName,
                     profileImage: us.data.user.profileImage
                 });
-                Toast.show({
-                    type: 'info',
-                    text1: `Login as ${email}`
-                });
+
+                showSuccessToast(`Login as ${email.toLocaleLowerCase()}`)
                 setEmail("");
                 setPassword("");
             }
             else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: us.data.err
-                });
+                showErrorToast(us.data.err)
             }
         } catch (err) {
             console.log("fail login to user: " + err)
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: "fail login to user"
-            });
+            showErrorToast('fail login to user')
         }
     }
 
@@ -85,7 +74,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 <Text style={styles.signuptext}
                 >Sign up</Text>
             </TouchableOpacity>
-            <Toast />
+            {/* <Toast /> */}
 
         </View>
     );

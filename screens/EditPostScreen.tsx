@@ -9,6 +9,7 @@ import Toast from 'react-native-toast-message';
 import PostModel, { UpdatePost } from '../models/PostModel';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
+import { showSuccessToast, showErrorToast } from '../tools/ToastMessage'
 
 const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const postId = JSON.stringify(route.params.postId)
@@ -111,14 +112,11 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
         try {
             await PostModel.deletePostById(postId, userAccessToken);
             setIsLoading(false);
-            navigation.navigate('Home')
+            showSuccessToast('Delete Post')
+            navigation.navigate('Home');
         } catch (err) {
-            console.log("fail to delete a post: " + err)
-            Toast.show({
-                type: 'error',
-                text1: 'Error',
-                text2: "fail to delete a post"
-            });
+            console.log("fail to delete a post: " + err);
+            showErrorToast('Fail to delete a post');
             setIsLoading(false);
         }
 
@@ -135,6 +133,10 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
     }
 
     const updateCallback = async () => {
+        if(data.postImage == postImage && data.message == postText){
+            showErrorToast("Nothing to Update")
+            return
+        }
         setIsLoading(true);
         if (postImage != '' && postImage != data.postImage) {
             const res = await getImgCloudSrc();
@@ -146,14 +148,11 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 }
                 const us: any = await PostModel.updatePost(postId, userAccessToken, post);
                 setIsLoading(false);
+                showSuccessToast('Update Successful')
                 navigation.navigate('Posts')
             } catch (err) {
                 console.log("fail to update a user: " + err)
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to upload a post"
-                });
+                showErrorToast('Fail to update a post');
                 setIsLoading(false);
             }
         }
@@ -165,14 +164,11 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 }
                 const us: any = await PostModel.updatePost(postId, userAccessToken, post);
                 setIsLoading(false);
+                showSuccessToast('Update Successful')
                 navigation.navigate('Posts')
             } catch (err) {
                 console.log("fail to update a user: " + err)
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: "fail to upload a post"
-                });
+                showErrorToast('Fail to update a post');
                 setIsLoading(false);
             }
         }
@@ -227,7 +223,6 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                         <TouchableOpacity onPress={deletePost} >
                             <Ionicons name={'trash'} color={Colors.delete} style={styles.deletePostButton} size={40} />
                         </TouchableOpacity>
-                        <Toast />
                     </View>
                 </ScrollView >
             }

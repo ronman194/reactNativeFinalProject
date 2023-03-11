@@ -2,9 +2,9 @@ import { useState, FC } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import UserModel, { User } from '../models/UserModel';
-import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
 import Colors from '../tools/Colors';
+import { showSuccessToast, showErrorToast } from '../tools/ToastMessage'
 
 
 
@@ -16,14 +16,6 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
-    const showToast = () => {
-        Toast.show({
-            type: 'success',
-            text1: 'Hello',
-            text2: 'This is some something 👋'
-        });
-    }
 
     const onSaveCallback = async () => {
         const user: User = {
@@ -37,17 +29,14 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
             const us: any = await UserModel.registerUser(user);
             if (us.status === 200) {
                 navigation.push('Login');
-                showToast();
+                showSuccessToast("Register Successfully")
             }
             else {
-                Toast.show({
-                    type: 'error',
-                    text1: 'Error',
-                    text2: us.data.err
-                });
+                showErrorToast(us.data.err)
             }
         } catch (err) {
             console.log("fail register user: " + err)
+            showErrorToast("fail register user")
         }
     }
 
@@ -109,7 +98,6 @@ const SignupScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }
                 onPress={() => { navigation.navigate("Login") }}>
                 <Text style={styles.loginText}>Login</Text>
             </TouchableOpacity>
-            <Toast />
         </View>
     );
 }
