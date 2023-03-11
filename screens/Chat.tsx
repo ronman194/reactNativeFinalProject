@@ -5,6 +5,8 @@ import { DefaultEventsMap } from "@socket.io/component-emitter";
 import Client, { Socket } from "socket.io-client";
 import { useSelector } from 'react-redux';
 import Colors from '../tools/Colors';
+import Loading from '../Components/Loading';
+
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
 
@@ -14,6 +16,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const userEmail = useSelector((state: any) => state.email);
     const userAccessToken = useSelector((state: any) => state.accessToken);
     const profileImage = useSelector((state: any) => state.profileImage);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     const clientSocketConnect = (
@@ -38,12 +41,14 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
 
     useEffect(() => {
         const subscribe = navigation.addListener("focus", async () => {
+            setIsLoading(true)
             socket = await connectUser();
 
             socket.emit('allMessages')
             socket.on('allMessages', (allMessages) => {
                 setMessages(allMessages);
             });
+            setIsLoading(false)
 
 
             socket.on('newMessage', (message) => {
@@ -73,52 +78,54 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <ImageBackground source={require('../assets/ChatBackground.jpg')} resizeMode="cover"
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                }} >
-                <FlatList
-                    data={messages}
-                    renderItem={({ item }) => (
-                        <View style={userEmail === item.sender ? styles.mmessageWrapper : [styles.mmessageWrapper, { alignItems: 'flex-end' }]}>
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                {
-                                    item.senderImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.mvatar}></Image> :
-                                        <Image source={{ uri: item.senderImage }} style={styles.mvatar} />
-                                }
-                                <View style={{ flexDirection: 'column' }}>
-                                    <View style={userEmail === item.sender ? styles.mmessage : [styles.mmessage, { backgroundColor: Colors.primary }]}>
-                                        <Text style={userEmail === item.sender ? styles.userName : [styles.userName, { color: Colors.pink }]} >
-                                            {item.sender.toUpperCase()}
-                                        </Text>
+            {isLoading ? <Loading /> :
+                <ImageBackground source={require('../assets/ChatBackground.jpg')} resizeMode="cover"
+                    style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                    }} >
+                    <FlatList
+                        data={messages}
+                        renderItem={({ item }) => (
+                            <View style={userEmail === item.sender ? styles.mmessageWrapper : [styles.mmessageWrapper, { alignItems: 'flex-end' }]}>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    {
+                                        item.senderImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.mvatar}></Image> :
+                                            <Image source={{ uri: item.senderImage }} style={styles.mvatar} />
+                                    }
+                                    <View style={{ flexDirection: 'column' }}>
+                                        <View style={userEmail === item.sender ? styles.mmessage : [styles.mmessage, { backgroundColor: Colors.primary }]}>
+                                            <Text style={userEmail === item.sender ? styles.userName : [styles.userName, { color: Colors.pink }]} >
+                                                {item.sender.toUpperCase()}
+                                            </Text>
 
-                                        <Text style={styles.messageText} >{item.message}</Text>
-                                        <Text style={styles.messageDate}>{item.time.substr(8, 2)}-{item.time.substr(5, 2)}-{item.time.substr(0, 4)} {item.time.substr(11, 5)}</Text>
+                                            <Text style={styles.messageText} >{item.message}</Text>
+                                            <Text style={styles.messageDate}>{item.time.substr(8, 2)}-{item.time.substr(5, 2)}-{item.time.substr(0, 4)} {item.time.substr(11, 5)}</Text>
+                                        </View>
                                     </View>
                                 </View>
                             </View>
+                        )}
+                        keyExtractor={item => item._id}
+                        style={styles.messages}
+                    />
+                    <KeyboardAvoidingView keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Type your message"
+                                placeholderTextColor={Colors.text}
+                                value={text}
+                                onChangeText={setText}
+                                multiline={true}
+                            />
+                            <TouchableOpacity style={styles.button} onPress={sendMessage}>
+                                <Text style={styles.buttonText}>Send</Text>
+                            </TouchableOpacity>
                         </View>
-                    )}
-                    keyExtractor={item => item._id}
-                    style={styles.messages}
-                />
-                <KeyboardAvoidingView keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Type your message"
-                            placeholderTextColor={Colors.text}
-                            value={text}
-                            onChangeText={setText}
-                            multiline={true}
-                        />
-                        <TouchableOpacity style={styles.button} onPress={sendMessage}>
-                            <Text style={styles.buttonText}>Send</Text>
-                        </TouchableOpacity>
-                    </View>
-                </KeyboardAvoidingView>
-            </ImageBackground>
+                    </KeyboardAvoidingView>
+                </ImageBackground>
+            }
         </View>
     );
 };

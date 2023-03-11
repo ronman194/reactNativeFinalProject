@@ -4,11 +4,15 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
 import Colors from '../tools/Colors';
 import UserModel, { loginUser } from '../models/UserModel';
-import {showSuccessToast, showErrorToast} from '../tools/ToastMessage'
+import { showSuccessToast, showErrorToast } from '../tools/ToastMessage'
+import Loading from '../Components/Loading';
+
 
 const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
 
     const onSaveCallback = async () => {
         const user: loginUser = {
@@ -16,6 +20,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
             password: password,
         }
         try {
+            setIsLoading(true)
             const us: any = await UserModel.loginUser(user);
             if (us.status === 200) {
                 store.dispatch({
@@ -24,15 +29,17 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     firstName: us.data.user.firstName, lastName: us.data.user.lastName,
                     profileImage: us.data.user.profileImage
                 });
-
+                setIsLoading(false)
                 showSuccessToast(`Login as ${email.toLocaleLowerCase()}`)
                 setEmail("");
                 setPassword("");
             }
             else {
+                setIsLoading(false)
                 showErrorToast(us.data.err)
             }
         } catch (err) {
+            setIsLoading(false)
             console.log("fail login to user: " + err)
             showErrorToast('fail login to user')
         }
@@ -40,42 +47,38 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
 
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={styles.inputContainer}>
-                    <Ionicons name={'mail'} style={styles.inputIcon} size={30} />
-                    <TextInput
-                        style={styles.inputs}
-                        onChangeText={setEmail}
-                        value={email}
-                        placeholder={'Enter Email'}
-                        placeholderTextColor={Colors.text}
-                        underlineColorAndroid="transparent"
-                    />
-                </View>
-                <View style={styles.inputContainer}>
-                    <Ionicons name={'key'} style={styles.inputIcon} size={30} />
-                    <TextInput
-                        style={styles.inputs}
-                        onChangeText={setPassword}
-                        value={password}
-                        placeholder={'Enter Password'}
-                        placeholderTextColor={Colors.text}
-                        secureTextEntry={true}
-                        underlineColorAndroid="transparent"
-                    />
-                </View>
-            </KeyboardAvoidingView>
-            <TouchableOpacity onPress={onSaveCallback} style={[styles.buttonContainer, styles.loginButton]}
-            >
-                <Text style={styles.loginText}>Login</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => { navigation.navigate("Signup") }}>
-                <Text style={styles.signuptext}
-                >Sign up</Text>
-            </TouchableOpacity>
-            {/* <Toast /> */}
-
+            {isLoading ? <Loading /> :
+                <><KeyboardAvoidingView keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    <View style={styles.inputContainer}>
+                        <Ionicons name={'mail'} style={styles.inputIcon} size={30} />
+                        <TextInput
+                            style={styles.inputs}
+                            onChangeText={setEmail}
+                            value={email}
+                            placeholder={'Enter Email'}
+                            placeholderTextColor={Colors.text}
+                            underlineColorAndroid="transparent" />
+                    </View>
+                    <View style={styles.inputContainer}>
+                        <Ionicons name={'key'} style={styles.inputIcon} size={30} />
+                        <TextInput
+                            style={styles.inputs}
+                            onChangeText={setPassword}
+                            value={password}
+                            placeholder={'Enter Password'}
+                            placeholderTextColor={Colors.text}
+                            secureTextEntry={true}
+                            underlineColorAndroid="transparent" />
+                    </View>
+                </KeyboardAvoidingView><TouchableOpacity onPress={onSaveCallback} style={[styles.buttonContainer, styles.loginButton]}
+                >
+                        <Text style={styles.loginText}>Login</Text>
+                    </TouchableOpacity><TouchableOpacity
+                        onPress={() => { navigation.navigate("Signup"); }}>
+                        <Text style={styles.signuptext}
+                        >Sign up</Text>
+                    </TouchableOpacity></>
+            }
         </View>
     );
 }
