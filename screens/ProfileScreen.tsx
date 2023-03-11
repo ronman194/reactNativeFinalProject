@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView, ActivityIndicator, SafeAreaView } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, TextInput, ScrollView, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import UserModel, { UpdateUser } from '../models/UserModel';
 import * as ImagePicker from 'expo-image-picker'
@@ -128,7 +128,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 setIsLoading(false);
             }
         }
-        else{
+        else {
             try {
                 store.dispatch({
                     type: 'UPDATE_USER', accessToken: userAccessToken,
@@ -185,38 +185,41 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
             {isLoading ? <Loading /> :
                 <ScrollView>
                     <View style={styles.container}>
-                        <View style={styles.container}>
-                            {profileImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image> :
-                                profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
-                                    <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
-                            <TouchableOpacity onPress={openCamera} >
-                                <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={openGallery} >
-                                <Ionicons name={'image'} style={styles.galleryButton} size={50} />
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={styles.inputTitle}>First Name:</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={setFirstName}
-                            value={firstName}
-                            placeholder={'Enter your first name'}
-                        />
-                        <Text style={styles.inputTitle}>Last Name:</Text>
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={setLastName}
-                            value={lastName}
-                            placeholder={'Enter your last name'}
-                        />
+                        <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
-                        <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.updateButton}>
-                            <Text style={styles.buttonText}>UPDATE</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.logoutButton}>
-                            <Text style={styles.buttonText}>Log Out</Text>
-                        </TouchableOpacity>
+                            <View style={styles.container}>
+                                {profileImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.imageProfile}></Image> :
+                                    profileImage === profileImageUri ? <Image source={{ uri: profileImage }} style={styles.imageProfile}></Image> :
+                                        <Image source={{ uri: profileImageUri }} style={styles.imageProfile}></Image>}
+                                <TouchableOpacity onPress={openCamera} >
+                                    <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={openGallery} >
+                                    <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={styles.inputTitle}>First Name:</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={setFirstName}
+                                value={firstName}
+                                placeholder={'Enter your first name'}
+                            />
+                            <Text style={styles.inputTitle}>Last Name:</Text>
+                            <TextInput
+                                style={styles.input}
+                                onChangeText={setLastName}
+                                value={lastName}
+                                placeholder={'Enter your last name'}
+                            />
+                            <TouchableOpacity disabled={isLoading} onPress={onSaveCallback} style={styles.updateButton}>
+                                <Text style={styles.buttonText}>UPDATE</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity disabled={isLoading} onPress={onLogoutCallback} style={styles.logoutButton}>
+                                <Text style={styles.buttonText}>Log Out</Text>
+                            </TouchableOpacity>
+                        </KeyboardAvoidingView>
+
                     </View>
                 </ScrollView>
             }
@@ -236,6 +239,7 @@ const styles = StyleSheet.create({
         width: 300,
         marginBottom: 30,
         borderRadius: 150,
+        marginTop:10
     },
     cameraButton: {
         position: 'absolute',
@@ -260,7 +264,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         textAlign: 'center',
-        color: Colors.text
+        color: Colors.text,
+        borderColor: '#ccc',
     },
     inputTitle: {
         marginTop: 5,

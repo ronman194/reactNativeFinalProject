@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, TextInput, ScrollView, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
 import Colors from '../tools/Colors';
@@ -55,29 +55,31 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
 
     return (
         <View style={styles.container}>
-            <View style={styles.inputContainer}>
-                <Ionicons name={'mail'} style={styles.inputIcon} size={30} />
-                <TextInput
-                    style={styles.inputs}
-                    onChangeText={setEmail}
-                    value={email}
-                    placeholder={'Enter Email'}
-                    placeholderTextColor={Colors.text}
-                    underlineColorAndroid="transparent"
-                />
-            </View>
-            <View style={styles.inputContainer}>
-                <Ionicons name={'key'} style={styles.inputIcon} size={30} />
-                <TextInput
-                    style={styles.inputs}
-                    onChangeText={setPassword}
-                    value={password}
-                    placeholder={'Enter Password'}
-                    placeholderTextColor={Colors.text}
-                    secureTextEntry={true}
-                    underlineColorAndroid="transparent"
-                />
-            </View>
+            <KeyboardAvoidingView  keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                <View style={styles.inputContainer}>
+                    <Ionicons name={'mail'} style={styles.inputIcon} size={30} />
+                    <TextInput
+                        style={styles.inputs}
+                        onChangeText={setEmail}
+                        value={email}
+                        placeholder={'Enter Email'}
+                        placeholderTextColor={Colors.text}
+                        underlineColorAndroid="transparent"
+                    />
+                </View>
+                <View style={styles.inputContainer}>
+                    <Ionicons name={'key'} style={styles.inputIcon} size={30} />
+                    <TextInput
+                        style={styles.inputs}
+                        onChangeText={setPassword}
+                        value={password}
+                        placeholder={'Enter Password'}
+                        placeholderTextColor={Colors.text}
+                        secureTextEntry={true}
+                        underlineColorAndroid="transparent"
+                    />
+                </View>
+            </KeyboardAvoidingView>
             <TouchableOpacity onPress={onSaveCallback} style={[styles.buttonContainer, styles.loginButton]}
             >
                 <Text style={styles.loginText}>Login</Text>

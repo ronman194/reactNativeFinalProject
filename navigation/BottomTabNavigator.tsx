@@ -20,15 +20,7 @@ function BottomTabNavigator() {
         <Tab.Navigator initialRouteName="Posts" screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
                 let iconName: any = "";
-                if (route.name === 'StudentList') {
-                    iconName = focused
-                        ? 'information-circle'
-                        : 'information-circle-outline';
-                }
-                else if (route.name === 'StudentAdd') {
-                    iconName = focused ? 'list-circle' : 'list-circle-outline';
-                }
-                else if (route.name === 'Profile') {
+                if (route.name === 'Profile') {
                     iconName = focused ? 'person-circle' : 'person-circle-outline';
                 }
                 else if (route.name === 'AddPost') {
@@ -51,9 +43,6 @@ function BottomTabNavigator() {
             headerStyle: { backgroundColor: Colors.header },
             tabBarStyle: { backgroundColor: Colors.header }
         })}>
-
-            <Tab.Screen name="StudentList" component={StudentList} />
-            <Tab.Screen name="StudentAdd" component={StudentAdd} />
             <Tab.Screen name="Posts" component={PostStack} options={{ headerShown: false }} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
             <Tab.Screen name="AddPost" component={AddPost} />

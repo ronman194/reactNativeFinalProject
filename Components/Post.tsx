@@ -39,6 +39,7 @@ const Post: FC<{ navigation: any, post: any }> =
                             <Text style={styles.editPostButton}>Edit Post</Text>
                         </TouchableOpacity>}
                 </View>
+                <Text style={styles.caption}>{post.message}</Text>
                 {post.postImage && 
                 <><TouchableOpacity onPress={handleImagePress}>
                         <Image
@@ -56,7 +57,7 @@ const Post: FC<{ navigation: any, post: any }> =
                         </Modal></>
                     // <Image style={styles.postImage} source={{ uri: post.postImage }} />
                 }
-                <Text style={styles.caption}>{post.message}</Text>
+                {/* <Text style={styles.caption}>{post.message}</Text> */}
             </View>
         );
     };
@@ -68,6 +69,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginHorizontal: 15,
         padding: 10,
+        width:300,
+        alignSelf:'center'
     },
     header: {
         flexDirection: 'row',
@@ -82,21 +85,24 @@ const styles = StyleSheet.create({
     },
     username: {
         fontWeight: 'bold',
-        color: Colors.text
+        color: Colors.text,
     },
     postImage: {
-        width: '100%',
-        height: 200,
+        width:'95%',
+        height: 250,
         marginBottom: 10,
+        resizeMode:'stretch',
+        alignSelf:'center'
     },
     caption: {
         fontSize: 16,
-        color: Colors.text
+        color: Colors.text,
+        marginBottom:10
     },
     editPostButton: {
         fontWeight: 'bold',
         alignSelf: 'flex-end',
-        marginLeft: 120,
+        marginLeft: 80,
         color: Colors.text
     },
     modal: {
