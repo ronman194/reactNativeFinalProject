@@ -90,6 +90,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
             showErrorToast("please provie valid data")
             return;
         }
+        if(postText == ''){
+            showErrorToast("please provie valid data")
+            return;
+        }
         setIsLoading(true);
         if (postImage != '') {
             const res = await getImgCloudSrc();
@@ -107,7 +111,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 const us: any = await PostModel.addPost(post, userAccessToken);
                 setIsLoading(false);
                 showSuccessToast('Post Added successfully')
-                navigation.navigate('Posts')
+                navigation.navigate('Home')
             } catch (err) {
                 showErrorToast("fail to upload a post")
                 setIsLoading(false);
@@ -127,7 +131,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 const us: any = await PostModel.addPost(post, userAccessToken);
                 setIsLoading(false);
                 showSuccessToast('Post Added successfully')
-                navigation.navigate('Posts')
+                navigation.navigate('Home')
             } catch (err) {
                 showErrorToast("fail to upload a post")
                 setIsLoading(false);

@@ -7,6 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import EditPostScreen from '../screens/EditPostScreen';
 import Colors from '../tools/Colors';
 import UserPostsScreen from '../screens/UserPostsScreen';
+import AddPostPage from '../screens/AddPost';
 
 
 
@@ -56,6 +57,11 @@ const PostStack: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
                 name={"EditPost"}
                 component={EditPostScreen}
                 options={{ headerTitle: "Edit Posts" }}
+            />
+            <Stack.Screen
+                name={"AddPost"}
+                component={AddPostPage}
+                options={{ headerTitle: "Add Posts" }}
             />
             <Stack.Screen
                 name={"UserPosts"}

@@ -3,7 +3,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ProfileScreen from '../screens/ProfileScreen';
-import AddPost from '../screens/AddPost';
 import PostStack from './PostStack';
 import Colors from '../tools/Colors';
 import Chat from '../screens/Chat';
@@ -19,9 +18,6 @@ function BottomTabNavigator() {
                 let iconName: any = "";
                 if (route.name === 'Profile') {
                     iconName = focused ? 'person-circle' : 'person-circle-outline';
-                }
-                else if (route.name === 'AddPost') {
-                    iconName = focused ? 'add-circle' : 'add-circle-outline';
                 }
                 else if (route.name === 'Posts') {
                     iconName = focused ? 'home' : 'home-outline';
@@ -39,9 +35,8 @@ function BottomTabNavigator() {
             headerStyle: { backgroundColor: Colors.header },
             tabBarStyle: { backgroundColor: Colors.header }
         })}>
-            <Tab.Screen name="Posts" component={PostStack} options={{ headerShown: false }} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
-            <Tab.Screen name="AddPost" component={AddPost} />
+            <Tab.Screen name="Posts" component={PostStack} options={{ headerShown: false }} />
             <Tab.Screen name="Chat" component={Chat} />
         </Tab.Navigator>
     );
