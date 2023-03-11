@@ -1,10 +1,9 @@
-import { useState, FC, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
+import { useState, FC } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import UserModel, { User } from '../models/UserModel';
 import Toast from 'react-native-toast-message';
 import { useSelector } from 'react-redux';
-import store from '../redux/store';
 import Colors from '../tools/Colors';
 
 

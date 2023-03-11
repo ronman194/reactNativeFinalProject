@@ -1,6 +1,5 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useState, useEffect, FC } from 'react';
-import { View, Text, FlatList, Image, StyleSheet, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
+import { View, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import { useSelector } from 'react-redux';
 import PostModel from '../models/PostModel';
 import Post from '../Components/Post';
@@ -19,7 +18,6 @@ const UserPostsScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
             setIsLoading(true);
-            console.log(userEmail);
             try {
                 const postsList = await PostModel.getAllPostsBySender(userEmail, userAccessToken);
                 setPosts(postsList.reverse());
@@ -53,7 +51,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: Colors.primary,
         padding: 10,
-        // marginTop: StatusBar.currentHeight
     },
 });
 

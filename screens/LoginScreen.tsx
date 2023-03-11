@@ -1,9 +1,8 @@
 import { useState, FC, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, TextInput, ScrollView, Platform } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, KeyboardAvoidingView, TextInput, Platform } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import store from '../redux/store';
 import Colors from '../tools/Colors';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import UserModel, { loginUser } from '../models/UserModel';
 import Toast from 'react-native-toast-message';
@@ -26,9 +25,6 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                     firstName: us.data.user.firstName, lastName: us.data.user.lastName,
                     profileImage: us.data.user.profileImage
                 });
-                // navigation.navigate('Home');
-                // navigation.navigate('Home');
-                AsyncStorage.setItem('userConnected', 'true');
                 Toast.show({
                     type: 'info',
                     text1: `Login as ${email}`
@@ -55,7 +51,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
 
     return (
         <View style={styles.container}>
-            <KeyboardAvoidingView  keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <KeyboardAvoidingView keyboardVerticalOffset={100} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.inputContainer}>
                     <Ionicons name={'mail'} style={styles.inputIcon} size={30} />
                     <TextInput

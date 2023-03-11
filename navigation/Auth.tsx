@@ -5,12 +5,9 @@ import SignupScreen from '../screens/SignupScreen';
 import BottomTabNavigator from './BottomTabNavigator';
 import Colors from '../tools/Colors';
 import { useSelector } from 'react-redux';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Stack = createNativeStackNavigator();
-// Navigator, Screen, Group
-
 function Auth() {
     const isLoggedIn = useSelector((state: any) => state.isLoggedIn);
     return (

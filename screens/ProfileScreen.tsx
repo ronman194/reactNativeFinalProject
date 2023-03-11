@@ -1,5 +1,5 @@
 import { FC, useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, TextInput, ScrollView, ActivityIndicator, SafeAreaView, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, TextInput, ScrollView, SafeAreaView, Platform } from 'react-native';
 import { useSelector } from 'react-redux';
 import UserModel, { UpdateUser } from '../models/UserModel';
 import * as ImagePicker from 'expo-image-picker'
@@ -9,7 +9,6 @@ import store from '../redux/store';
 import Toast from 'react-native-toast-message';
 import Colors from '../tools/Colors';
 import Loading from '../Components/Loading';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -58,7 +57,6 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const source = { uri, type, name };
                 setImgSrc(source);
                 setUpdate(true)
-                console.log(source)
             }
 
         } catch (err) {
@@ -76,7 +74,6 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
                 const name = res.assets[0].fileName;
                 const source = { uri, type, name };
                 setImgSrc(source);
-                console.log(source)
                 setUpdate(true)
             }
 
@@ -88,8 +85,6 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     const getImgCloudSrc = async () => {
         try {
             const imgPath: any = await uploadToCloudinary(imgSrc);
-            // setProfileImageUri(imgPath.data.url);
-            console.log("pathhhh " + cloudSrc)
             return imgPath
         } catch (err) {
             console.log(err);
@@ -101,7 +96,6 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
         if (update) {
             const res = await getImgCloudSrc();
             setCloudSrc(res.data.url);
-            console.log("PATHHHHHH " + cloudSrc)
             try {
                 store.dispatch({
                     type: 'UPDATE_USER', accessToken: userAccessToken,
@@ -165,8 +159,6 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
             store.dispatch({ type: 'LOGOUT' });
             await UserModel.logout(userRefreshToken);
             setIsLoading(false);
-            AsyncStorage.removeItem('userConnected');
-            // navigation.navigate("Login");
         } catch (err) {
             console.log("fail to update a user: " + err)
             Toast.show({
@@ -183,7 +175,7 @@ const ProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation 
     return (
         <SafeAreaView style={styles.container}>
             {isLoading ? <Loading /> :
-                <ScrollView>
+                <ScrollView style={{flex:1}}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
@@ -234,12 +226,12 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.background
     },
     imageProfile: {
-        height: 300,
+        height: 250,
         alignSelf: 'center',
-        width: 300,
+        width: 250,
         marginBottom: 30,
         borderRadius: 150,
-        marginTop:10
+        marginTop: 10
     },
     cameraButton: {
         position: 'absolute',
@@ -284,7 +276,6 @@ const styles = StyleSheet.create({
         margin: 12,
         padding: 12,
         backgroundColor: Colors.green,
-        // backgroundColor: '#ac2378',
         borderRadius: 10,
         width: 200,
         alignSelf: 'center'
@@ -294,7 +285,6 @@ const styles = StyleSheet.create({
         margin: 12,
         padding: 12,
         backgroundColor: Colors.delete,
-        // backgroundColor: '#ac2378',
         borderRadius: 10,
         width: 200,
         alignSelf: 'center'

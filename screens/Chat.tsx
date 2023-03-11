@@ -87,7 +87,6 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                                     item.senderImage === "../assets/user.png" ? <Image source={require('../assets/user.png')} style={styles.mvatar}></Image> :
                                         <Image source={{ uri: item.senderImage }} style={styles.mvatar} />
                                 }
-                                {/* <Image source={{ uri: item.senderImage }} style={styles.mvatar} /> */}
                                 <View style={{ flexDirection: 'column' }}>
                                     <View style={userEmail === item.sender ? styles.mmessage : [styles.mmessage, { backgroundColor: Colors.primary }]}>
                                         <Text style={userEmail === item.sender ? styles.userName : [styles.userName, { color: Colors.pink }]} >

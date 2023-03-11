@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
@@ -38,12 +38,10 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
 
     useEffect(() => {
         askPermission();
-        console.log("HII " + postId)
     }, []);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            console.log('focus')
             setIsLoading(true);
             try {
                 const post = await PostModel.getPostById(postId, userAccessToken);
@@ -72,7 +70,6 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 const name = Date.now() + '.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
-                console.log(source)
             }
 
         } catch (err) {
@@ -90,7 +87,6 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 const name = res.assets[0].fileName;
                 const source = { uri, type, name };
                 setImgSrc(source);
-                console.log(source)
             }
 
         } catch (err) {
@@ -142,9 +138,7 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
         setIsLoading(true);
         if (postImage != '' && postImage != data.postImage) {
             const res = await getImgCloudSrc();
-            console.log("HIIJJJ " + res.data);
             setCloudSrc(res.data.url);
-            console.log("PATHHHHHH " + cloudSrc)
             try {
                 const post: UpdatePost = {
                     message: postText,
@@ -202,10 +196,6 @@ const EditPostScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                                     <Image style={styles.profileImage} source={require('../assets/user.png')} /> :
                                     <Image style={styles.profileImage} source={{ uri: profileImage }} />
                             }
-                            {/* <Image
-                                source={{ uri: profileImage }}
-                                style={styles.profileImage}
-                            /> */}
                             <Text style={styles.username}>{firstName} {lastName}</Text>
                         </View>
                         <View style={styles.content}>
@@ -320,7 +310,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold'
     },
-
 });
 
 export default EditPostScreen;

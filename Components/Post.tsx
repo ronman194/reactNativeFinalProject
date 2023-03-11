@@ -55,9 +55,7 @@ const Post: FC<{ navigation: any, post: any }> =
                                     source={{ uri: post.postImage }} />
                             </TouchableOpacity>
                         </Modal></>
-                    // <Image style={styles.postImage} source={{ uri: post.postImage }} />
                 }
-                {/* <Text style={styles.caption}>{post.message}</Text> */}
             </View>
         );
     };

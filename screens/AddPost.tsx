@@ -1,6 +1,5 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, StatusBar, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Image, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
@@ -30,13 +29,12 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 alert("camera permission is required");
             }
         } catch (err) {
-            console.log("Ask permission error " + err);
+            console.log(err);
         }
     }
 
     useEffect(() => {
         askPermission();
-        console.log("img src ")
     }, []);
 
     const openCamera = async () => {
@@ -49,11 +47,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 const name = Date.now() + '.jpg';
                 const source = { uri, type, name };
                 setImgSrc(source);
-                console.log(source)
             }
 
         } catch (err) {
-            console.log("open camera error:" + err)
+            console.log(err)
         }
     }
 
@@ -67,11 +64,10 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 const name = res.assets[0].fileName;
                 const source = { uri, type, name };
                 setImgSrc(source);
-                console.log(source)
             }
 
         } catch (err) {
-            console.log("open camera error:" + err)
+            console.log(err)
         }
     }
 
@@ -91,9 +87,7 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
         setIsLoading(true);
         if (postImage != '') {
             const res = await getImgCloudSrc();
-            console.log("HIIJJJ " + res.data);
             setCloudSrc(res.data.url);
-            console.log("PATHHHHHH " + cloudSrc)
             try {
                 const post: Post = {
                     message: postText,
@@ -108,7 +102,6 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 setIsLoading(false);
                 navigation.navigate('Posts')
             } catch (err) {
-                console.log("fail to update a user: " + err)
                 Toast.show({
                     type: 'error',
                     text1: 'Error',
@@ -132,7 +125,6 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 setIsLoading(false);
                 navigation.navigate('Posts')
             } catch (err) {
-                console.log("fail to update a user: " + err)
                 Toast.show({
                     type: 'error',
                     text1: 'Error',
@@ -159,10 +151,6 @@ const AddPostPage: FC<{ route: any, navigation: any }> = ({ route, navigation })
                                     <Image style={styles.profileImage} source={require('../assets/user.png')} /> :
                                     <Image style={styles.profileImage} source={{ uri: profileImage }} />
                             }
-                            {/* <Image
-                                source={{ uri: profileImage }}
-                                style={styles.profileImage}
-                            /> */}
                             <Text style={styles.username}>{firstName} {lastName}</Text>
                         </View>
                         <View style={styles.content}>

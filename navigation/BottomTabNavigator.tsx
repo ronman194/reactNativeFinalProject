@@ -2,11 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import StudentList from '../screens/StudentsList';
-import StudentAdd from '../screens/StudentAdd';
 import ProfileScreen from '../screens/ProfileScreen';
 import AddPost from '../screens/AddPost';
-import Feed from '../screens/PostsScreen';
 import PostStack from './PostStack';
 import Colors from '../tools/Colors';
 import Chat from '../screens/Chat';
@@ -32,7 +29,6 @@ function BottomTabNavigator() {
                 else if (route.name === 'Chat') {
                     iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
                 }
-                // You can return any component that you like here!
                 return <Ionicons name={iconName} size={size} color={color} />;
             },
             tabBarActiveTintColor: Colors.text,
