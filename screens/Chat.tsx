@@ -30,6 +30,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     };
 
     const connectUser = async () => {
+        // socket = Client("http://10.200.201.163:3000", {
         socket = Client("http://192.168.0.35:3000", {
             auth: {
                 token: "barrer " + userAccessToken,
