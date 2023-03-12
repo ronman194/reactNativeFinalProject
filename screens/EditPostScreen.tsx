@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { FC, useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, Text, TextInput, ScrollView, Image, StyleSheet, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
+// import { ScrollView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker'
 import uploadToCloudinary from '../api/cloudinaryApi';
