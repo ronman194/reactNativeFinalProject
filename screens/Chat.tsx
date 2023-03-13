@@ -13,7 +13,7 @@ let socket: Socket<DefaultEventsMap, DefaultEventsMap> | undefined;
 const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const [messages, setMessages] = useState<Array<any>>();
     const [text, setText] = useState('');
-    const userEmail = useSelector((state: any) => state.email);
+    const userEmail = useSelector((state: any) => state.email.toLowerCase());
     const userAccessToken = useSelector((state: any) => state.accessToken);
     const profileImage = useSelector((state: any) => state.profileImage);
     const [isLoading, setIsLoading] = useState(false);
@@ -135,6 +135,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'space-between',
+        backgroundColor: Colors.background
     },
     image: {
         flex: 1,
