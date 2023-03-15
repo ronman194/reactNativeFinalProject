@@ -38,4 +38,7 @@ npm install
 4. Start the Expo development server:
 npm start
 5. Open the Expo app on your mobile device and scan the QR code that appears in the terminal. This will load the app on your device.
+
+- To run this project make sure you run the server an the client at the same time.
+server code - https://github.com/ronman194/serverSideChatProject
 ###End
