@@ -12,6 +12,20 @@
 * API documented using SWAGGER
 * Activity indicator every time there is a request to the server or DB from the application.
 
+### Screenshots
+<table width="80%" border="0">
+  <tr>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/login.png?raw=true" alt="Screenshot 1" /></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/register.png?raw=true" alt="Screenshot 2"/></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/feed.png?raw=true" alt="Screenshot 3"/></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/myposts.png?raw=true" alt="Screenshot 4"/></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/editpost.png?raw=true" alt="Screenshot 5"/></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/addpost.png?raw=true" alt="Screenshot 6"/></td>
+  <td><img width="150" src="https://github.com/ronman194/reactNativeFinalProject/blob/main/screenshots/chat.png?raw=true" alt="Screenshot 7"/></td>
+  </tr>
+</table>
+
+
 ### Getting Started 
 1. Clone this repository to your local machine using the following command:
 git clone https://github.com/ronman194/reactNativeFinalProject
